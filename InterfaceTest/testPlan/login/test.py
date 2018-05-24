@@ -1,17 +1,9 @@
-
-import json
-def save_to_file(file_name, contents):
-    fh = open(file_name, 'w')
-    fh.write(contents)
-    fh.close()
-
-def re_write(response1):
-    user_info = '{\"name\" : \"' + response1 + '\"}'
-    return user_info
-
+from testPlan.common.commonFun import Fun
 #save_to_file('mobiles.txt', 'your contents str')
-name = "jinfei2"
-user_info = re_write(name)
-print(user_info)
-print(type(user_info))
-save_to_file('token.json',user_info)
+response3 = "jinfei2"
+token_info = Fun.re_write(response3)
+
+Fun.save_to_jsonfile('../common/token.json', token_info)
+
+print(token_info)
+print(type(token_info))

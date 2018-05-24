@@ -36,5 +36,7 @@ class MyTest(unittest.TestCase):        #封装测试环境的初始化
         response3 = requests.post(url=self.url3, data=message3, headers=header3)
         print("status_code3:"+str(response3.status_code))
         print("token:"+response3.text)
+        token_info = Fun.re_write(response3.text)
+        Fun.save_to_jsonfile('../common/token.json', token_info)
 if __name__=="__main__":
     unittest.main()
