@@ -2,11 +2,11 @@ import re
 
 class Fun:
     #定义函数jsonFile用来保存获取的response到指定文件
-    def jsonFile(fileData):
-        file = open("C:\Software\pycharm\json.txt", "w")
-        file.write(fileData)
-        print("Data  OK")
-        file.close()
+    def save_to_jsonfile(file_name, contents):
+        fh = open(file_name, 'w')
+        fh.write(contents)
+        fh.close()
+        print("Data saved ok")
     #定义函数getSession用来获取返回的sessionid和sessiondate
     def getSessionId(response):
         # 正则表达式截取返回结果的SessionID格式：res = r'<td>(.*?)</td><td>(.*?)</td>'
@@ -25,6 +25,10 @@ class Fun:
         z = x.copy()
         z.update(y)
         return z
+    #response数据重写
+    def re_write(response1):
+        user_info = '{\"token\" : \"' + response1 + '\"}'
+        return user_info
 class Login_Element:
     server1 = "https://api.home-connect.cn"
     server2 = "https://solution.home-connect.cn"
