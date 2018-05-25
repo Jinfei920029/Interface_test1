@@ -12,7 +12,7 @@ class MyTest(unittest.TestCase):        #封装测试环境的初始化
         pass
 
     def test_Login1(self):
-        #开始第一个get请求获取sessionid和sessiondata
+        #开始第一个get请求获取sessionid和sessiondata.
         self.url1 = Login_Element.login_url1
         params1 = Login_Element.params1
         self.params1 = params1
@@ -22,14 +22,14 @@ class MyTest(unittest.TestCase):        #封装测试环境的初始化
         self.sessionid = sessionid
         sessiondata = Fun.getSessionData(response1.text)
         self.sessiondata = sessiondata
-        #开始第二个post请求
+        #开始第二个post请求.
         self.url2 = Login_Element.login_url2
         message2 = {"sessionId":sessionid,"sessionData":sessiondata}
         message2_2 = Fun.merge_Two_Dicts(Login_Element.message2,message2)
         header2 = Login_Element.header2
         response2 = requests.post(url=self.url2, data=message2_2, headers=header2)
         print("status_code2:"+str(response2.status_code))
-        #获取token请求
+        #获取token请求.
         self.url3 = Login_Element.login_url3
         message3 ={"sessionId":sessionid}
         header3 = Login_Element.header3
