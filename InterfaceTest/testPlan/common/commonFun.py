@@ -6,9 +6,11 @@ class Fun:
     def take_token(path):
         with open(path, 'r') as load_f:
             load_dict = json.load(load_f)
-            for value in load_dict.values():
-                print("take_token:" + value)
-                return value
+            #for value in load_dict.values():
+                #print("take_token获取成功:" + value)
+                #return value
+            print(load_dict)
+            return load_dict
     #定义函数jsonFile用来保存获取的response到指定文件
     def save_to_jsonfile(file_name, contents):
         try:
@@ -62,7 +64,7 @@ class Fun:
         return z
     #response数据重写
     def re_write(response1):
-        user_info = '{\"token\" : \"' + response1 + '\"}'
+        user_info = '{\"bshtoken\" : \"' + response1 + '\"}'
         return user_info
 class Login_Element:
     server1 = "https://api.home-connect.cn"
@@ -78,6 +80,10 @@ class Login_Element:
                'ha_id': 'SIEMENS-KA92NP49TI-68A40E005BA3',
                'device_code': '123456789'}
     message2 = {"client_id": "970F224CEB3BC18966E2A0564D00B88235FCB2753FCC9C98C1208199EF651F07",
-                "email": "pcn80130@mailinator.com",
-                "password": "qwer-1234",
+                "email": "pcn90@grr.la",
+                "password": "qwer1234!",
                 }
+class BasicSupport_Element:
+    server2 = "https://solution.home-connect.cn"
+    IPLocation_url = server2 + "/sfmapi/service/v1/ip/getCityInfo"
+    header1 = {'Content-Type': 'application/json'}

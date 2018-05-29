@@ -8,7 +8,7 @@ class MyTest(unittest.TestCase):        #封装测试环境的初始化
         pass
 
 
-    def test_Login1(self):
+    def test_1_Login1(self):
         #开始第一个get请求获取sessionid和sessiondata
         try:
             self.url1 = Login_Element.login_url1
@@ -48,7 +48,7 @@ class MyTest(unittest.TestCase):        #封装测试环境的初始化
             print("status_code3:" + str(response3.status_code))
             print("token:" + response3.text)
             token_info = Fun.re_write(response3.text)
-            Fun.save_to_jsonfile('../common/token.json', token_info)
+        Fun.save_to_jsonfile('../common/token.json', token_info)
 
 
     def tearDown(self):
