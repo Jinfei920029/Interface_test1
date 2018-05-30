@@ -1,6 +1,7 @@
 import requests
 import unittest
-from testPlan.common.commonFun import Login_Element,Fun
+from common.commonFun import Login_Element,Fun
+
 
 class MyTest(unittest.TestCase):        #封装测试环境的初始化
     def setUp(self):

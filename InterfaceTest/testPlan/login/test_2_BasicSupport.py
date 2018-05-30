@@ -25,6 +25,8 @@ class MyTest(unittest.TestCase):        #封装测试环境的初始化
         else:
             print("status_code_IPLocation:" + str(response1.status_code))
             print("pass")
+
+    #def test_2_IPLocationInterface(self):
     def tearDown(self):
         print("-----end test Basic Support-----")
         pass

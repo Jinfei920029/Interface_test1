@@ -1,6 +1,8 @@
 import re
 import json
+import sys
 
+sys.path
 class Fun:
     #读取文件内容
     def take_token(path):
