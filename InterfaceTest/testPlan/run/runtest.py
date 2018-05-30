@@ -4,7 +4,7 @@ import sys
 sys.path.append(os.path.abspath(os.path.dirname(os.getcwd())))
 
 from testPlan.packages.HTMLTestRunner import HTMLTestRunner
-test_dir = '../login'
+test_dir = '../case'
 discover = unittest.defaultTestLoader.discover(test_dir, pattern='test*.py')
 
 if __name__ == '__main__':

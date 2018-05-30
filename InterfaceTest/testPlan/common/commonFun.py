@@ -89,3 +89,8 @@ class BasicSupport_Element:
     server2 = "https://solution.home-connect.cn"
     IPLocation_url = server2 + "/sfmapi/service/v1/ip/getCityInfo"
     header1 = {'Content-Type': 'application/json'}
+    Realtimeweather_url = server2 + "/sfmapi/service/v1/weather/getWeather"
+    header2 = {'Content-Type': 'application/json',
+               'location':'nanjing',
+               'language':'Zh-Hans',
+               'unit':'c'}
