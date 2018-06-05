@@ -1,6 +1,7 @@
 import re
 import json
 import sys
+import requests
 
 sys.path
 class Fun:
@@ -68,6 +69,33 @@ class Fun:
     def re_write(response1):
         user_info = '{\"bshtoken\" : \"' + response1 + '\"}'
         return user_info
+    #定义get函数
+    def get_url(url, params, headers):
+        url = url
+        params = params
+        headers = headers
+        response = requests.get(url=url, params=params, headers=headers)
+        d = json.loads(response.text)
+        assert response.status_code == 200
+        assert d["retInfo"] == "success", "retInfo not right"
+        assert "retBody" in d.keys()
+        print("status_code_IPLocation:" + str(response.status_code))
+        print(response.text)
+        print("pass")
+
+        # 定义post函数
+        def post_url(url, data, headers):
+            url = url
+            data = data
+            headers = headers
+            response = requests.post(url=url, data=data, headers=headers)
+            d = json.loads(response.text)
+            assert response.status_code == 200
+            assert d["retInfo"] == "success", "retInfo not right"
+            assert "retBody" in d.keys()
+            print("status_code_IPLocation:" + str(response.status_code))
+            print(response.text)
+            print("pass")
 class Login_Element:
     server1 = "https://api.home-connect.cn"
     server2 = "https://solution.home-connect.cn"
@@ -94,3 +122,14 @@ class BasicSupport_Element:
                'location':'nanjing',
                'language':'Zh-Hans',
                'unit':'c'}
+    WeatherforecastInterface_url = server2 + "/sfmapi/service/v1/weather/future"
+    header3 = {'Content-Type': 'application/json',
+               'location': 'nanjing',
+               'language': 'Zh-Hans',
+               'unit': 'c',
+               'start':'0',
+               'days':'1'}
+    TimeSynchronization_url = server2 + "/sfmapi/service/v1/weather/time"
+    header4 = {
+        'Content-Type': 'application/json'
+    }

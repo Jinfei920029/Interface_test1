@@ -189,9 +189,9 @@ function showOutput(id, name) {
 
 <div class='heading'>
 <h1>Test report</h1>
-<p class='attribute'><strong>Start Time:</strong> 2018-05-30 13:53:39</p>
-<p class='attribute'><strong>Duration:</strong> 0:00:06.871393</p>
-<p class='attribute'><strong>Status:</strong> Pass 2</p>
+<p class='attribute'><strong>Start Time:</strong> 2018-05-31 11:24:10</p>
+<p class='attribute'><strong>Duration:</strong> 0:00:06.974399</p>
+<p class='attribute'><strong>Status:</strong> Pass 1 Failure 2</p>
 
 <p class='description'>用例执行情况：</p>
 </div>
@@ -249,7 +249,7 @@ pt1.1: start test
 status_code1:200
 status_code2:200
 status_code3:200
-token:eyJ0eXBlIjoiSldUIiwiYWxnIjoiSFM1MTIifQ.eyJzdWIiOiIxMjMiLCJoYV9pZCI6IlNJRU1FTlMtS0E5Mk5QNDlUSS02OEE0MEUwMDVCQTMiLCJkZXZpY2VfY29kZSI6IjEyMzQ1Njc4OSIsImVtYWlsIjoicGNuOTBAZ3JyLmxhIn0.qyn_2zdatoqOYJUhBdJdjjZvqkv6w0aPLncNsMwg85WjGpm2JhT5_5t9IQYhSKjhVIjpb8Qegnt-4UtIiFDTaQ
+token:RetBody{retCode='0015', retInfo='There is no ha_id in ha_ids ', retBody=null}
 内容写入文件成功
 end test
 
@@ -261,35 +261,68 @@ end test
     </td>
 </tr>
 
-<tr class='passClass'>
+<tr class='failClass'>
     <td>test_2_BasicSupport.MyTest</td>
-    <td>1</td>
-    <td>1</td>
+    <td>2</td>
     <td>0</td>
+    <td>2</td>
     <td>0</td>
-    <td><a href="javascript:showClassDetail('c2',1)">Detail</a></td>
+    <td><a href="javascript:showClassDetail('c2',2)">Detail</a></td>
 </tr>
 
-<tr id='pt2.1' class='hiddenRow'>
-    <td class='none'><div class='testcase'>test_1_IPLocationInterface</div></td>
+<tr id='ft2.1' class='none'>
+    <td class='failCase'><div class='testcase'>test_1_IPLocationInterface</div></td>
     <td colspan='5' align='center'>
 
     <!--css div popup start-->
-    <a class="popup_link" onfocus='this.blur();' href="javascript:showTestDetail('div_pt2.1')" >
-        pass</a>
+    <a class="popup_link" onfocus='this.blur();' href="javascript:showTestDetail('div_ft2.1')" >
+        fail</a>
 
-    <div id='div_pt2.1' class="popup_window">
+    <div id='div_ft2.1' class="popup_window">
         <div style='text-align: right; color:red;cursor:pointer'>
-        <a onfocus='this.blur();' onclick="document.getElementById('div_pt2.1').style.display = 'none' " >
+        <a onfocus='this.blur();' onclick="document.getElementById('div_ft2.1').style.display = 'none' " >
            [x]</a>
         </div>
         <pre>
         
-pt2.1: -----start test Basic Support-----
+ft2.1: -----start test Basic Support-----
 IP Location Interface Test
-status_code_IPLocation:200
-pass
 -----end test Basic Support-----
+Traceback (most recent call last):
+  File "C:\Users\A692297\PycharmProjects\InterfaceTest\testPlan\case\test_2_BasicSupport.py", line 21, in test_1_IPLocationInterface
+    assert d["retInfo"] == "success", "retInfo not right"
+AssertionError: retInfo not right
+
+
+        </pre>
+    </div>
+    <!--css div popup end-->
+
+    </td>
+</tr>
+
+<tr id='ft2.2' class='none'>
+    <td class='failCase'><div class='testcase'>test_2_Realtimeweather</div></td>
+    <td colspan='5' align='center'>
+
+    <!--css div popup start-->
+    <a class="popup_link" onfocus='this.blur();' href="javascript:showTestDetail('div_ft2.2')" >
+        fail</a>
+
+    <div id='div_ft2.2' class="popup_window">
+        <div style='text-align: right; color:red;cursor:pointer'>
+        <a onfocus='this.blur();' onclick="document.getElementById('div_ft2.2').style.display = 'none' " >
+           [x]</a>
+        </div>
+        <pre>
+        
+ft2.2: -----start test Basic Support-----
+Real time weather Interface Test
+-----end test Basic Support-----
+Traceback (most recent call last):
+  File "C:\Users\A692297\PycharmProjects\InterfaceTest\testPlan\case\test_2_BasicSupport.py", line 37, in test_2_Realtimeweather
+    assert d["retInfo"] == "success", "retInfo not right"
+AssertionError: retInfo not right
 
 
         </pre>
@@ -301,9 +334,9 @@ pass
 
 <tr id='total_row'>
     <td>Total</td>
+    <td>3</td>
+    <td>1</td>
     <td>2</td>
-    <td>2</td>
-    <td>0</td>
     <td>0</td>
     <td>&nbsp;</td>
 </tr>

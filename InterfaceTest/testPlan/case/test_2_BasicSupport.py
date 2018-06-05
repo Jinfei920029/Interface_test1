@@ -12,36 +12,49 @@ class MyTest(unittest.TestCase):        #封装测试环境的初始化
     def test_1_IPLocationInterface(self):
         print("IP Location Interface Test")
         token = self.token
-        try:
-            self.url1 = BasicSupport_Element.IPLocation_url
-            heaad1_1 = Fun.merge_Two_Dicts(BasicSupport_Element.header1, token)
-            response1 = requests.post(url=self.url1, data={}, headers=heaad1_1)
-            d = json.loads(response1.text)
-            assert response1.status_code == 200
-            assert d["retInfo"] == "success", "retInfo not right"
-            assert "retBody" in d.keys()
-        except Exception as e:
-            print('Exception', e)
-        else:
-            print("status_code_IPLocation:" + str(response1.status_code))
-            print("pass")
+        self.url1 = BasicSupport_Element.IPLocation_url
+        heaad1_1 = Fun.merge_Two_Dicts(BasicSupport_Element.header1, token)
+        response1 = requests.post(url=self.url1, data={}, headers=heaad1_1)
+        d = json.loads(response1.text)
+        assert response1.status_code == 200
+        assert d["retInfo"] == "success", "retInfo not right"
+        assert "retBody" in d.keys()
+        print("status_code_IPLocation:" + str(response1.status_code))
+        print("pass")
 
     def test_2_Realtimeweather(self):
         print("Real time weather Interface Test")
         token = self.token
-        try:
-            self.url2 = BasicSupport_Element.Realtimeweather_url
-            heaad2_2 = Fun.merge_Two_Dicts(BasicSupport_Element.header2, token)
-            response2 = requests.post(url=self.url2, data={}, headers=heaad2_2)
-            d = json.loads(response2.text)
-            assert response2.status_code == 200
-            assert d["retInfo"] == "success", "retInfo not right"
-            assert "retBody" in d.keys()
-        except Exception as e:
-            print('Exception', e)
-        else:
-            print("status_code_IPLocation:" + str(response2.status_code))
-            print("pass")
+        self.url2 = BasicSupport_Element.Realtimeweather_url
+        heaad2_2 = Fun.merge_Two_Dicts(BasicSupport_Element.header2, token)
+        response2 = requests.get(url=self.url2, params={},headers=heaad2_2)
+        d = json.loads(response2.text)
+        assert response2.status_code == 200
+        assert d["retInfo"] == "success", "retInfo not right"
+        assert "retBody" in d.keys()
+        print("status_code_IPLocation:" + str(response2.status_code))
+        print("pass")
+
+    def test_3_WeatherforecastInterface(self):
+        print("Weather forecast Interface Test")
+        token = self.token
+        self.url3 = BasicSupport_Element.WeatherforecastInterface_url
+        heaad3_3 = Fun.merge_Two_Dicts(BasicSupport_Element.header3, token)
+        response3 = requests.get(url=self.url3, params={}, headers=heaad3_3)
+        d = json.loads(response3.text)
+        assert response3.status_code == 200
+        assert d["retInfo"] == "success", "retInfo not right"
+        assert "retBody" in d.keys()
+        print("status_code_IPLocation:" + str(response3.status_code))
+        print("pass")
+
+    def test_4_TimeSynchronizationInterface(self):
+        print("Time Synchronization Interface Test")
+        token = self.token
+        self.url4 = BasicSupport_Element.TimeSynchronization_url
+        self.params = {}
+        self.head4_4 = Fun.merge_Two_Dicts(BasicSupport_Element.header4, self.token)
+        Fun.get_url(self.url4, self.params,self.head4_4 )
     def tearDown(self):
         print("-----end test Basic Support-----")
         pass
