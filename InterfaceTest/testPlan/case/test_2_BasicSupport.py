@@ -13,14 +13,8 @@ class MyTest(unittest.TestCase):        #封装测试环境的初始化
         print("IP Location Interface Test")
         token = self.token
         self.url1 = BasicSupport_Element.IPLocation_url
-        heaad1_1 = Fun.merge_Two_Dicts(BasicSupport_Element.header1, token)
-        response1 = requests.post(url=self.url1, data={}, headers=heaad1_1)
-        d = json.loads(response1.text)
-        assert response1.status_code == 200
-        assert d["retInfo"] == "success", "retInfo not right"
-        assert "retBody" in d.keys()
-        print("status_code_IPLocation:" + str(response1.status_code))
-        print("pass")
+        head1_1 = Fun.merge_Two_Dicts(BasicSupport_Element.header1, token)
+        Fun.post_url(self.url1, data={}, headers=head1_1)
 
     def test_2_Realtimeweather(self):
         print("Real time weather Interface Test")

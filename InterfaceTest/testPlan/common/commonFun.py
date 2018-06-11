@@ -76,26 +76,27 @@ class Fun:
         headers = headers
         response = requests.get(url=url, params=params, headers=headers)
         d = json.loads(response.text)
+        print(response.text)
         assert response.status_code == 200
         assert d["retInfo"] == "success", "retInfo not right"
         assert "retBody" in d.keys()
         print("status_code_IPLocation:" + str(response.status_code))
-        print(response.text)
         print("pass")
 
-        # 定义post函数
-        def post_url(url, data, headers):
-            url = url
-            data = data
-            headers = headers
-            response = requests.post(url=url, data=data, headers=headers)
-            d = json.loads(response.text)
-            assert response.status_code == 200
-            assert d["retInfo"] == "success", "retInfo not right"
-            assert "retBody" in d.keys()
-            print("status_code_IPLocation:" + str(response.status_code))
-            print(response.text)
-            print("pass")
+    # 定义post函数
+    def post_url(url, data, headers):
+        url = url
+        data = data
+        headers = headers
+        response = requests.post(url, data, headers = headers)
+        d = json.loads(response.text)
+        print(response.text)
+        assert response.status_code == 200
+        assert d["retInfo"] == "success", "retInfo not right"
+        assert "retBody" in d.keys()
+        print("status_code_IPLocation:" + str(response.status_code))
+        print("pass")
+
 class Login_Element:
     server1 = "https://api.home-connect.cn"
     server2 = "https://solution.home-connect.cn"
