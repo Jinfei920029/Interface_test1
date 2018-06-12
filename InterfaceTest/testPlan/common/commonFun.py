@@ -97,6 +97,10 @@ class Fun:
         print("status_code_IPLocation:" + str(response.status_code))
         print("pass")
 
+class Url:
+    server1 = "https://api.home-connect.cn"
+    server2 = "https://solution.home-connect.cn"
+
 class Login_Element:
     server1 = "https://api.home-connect.cn"
     server2 = "https://solution.home-connect.cn"
@@ -133,4 +137,42 @@ class BasicSupport_Element:
     TimeSynchronization_url = server2 + "/sfmapi/service/v1/weather/time"
     header4 = {
         'Content-Type': 'application/json'
+    }
+
+class Recipe_Interfaces:
+    server2 = "https://solution.home-connect.cn"
+    getRecipeCatalogs_url = server2 + "/sfmapi/service/v1/recipe/getRecipeCatalogs"
+    header1 = {'Content-Type': 'application/json'}
+    data1 = {"header":{"timestamp":"2014-11-12 15:48:00","deviceCode":"BE080A300QZ225H00002","ver":"v1.0","sign":"18c8c29f0898ac4b8b0a7a6afdb436aa"},"data":{}}
+    getRecipeHotCatalogs_url =server2 + "/sfmapi/service/v1/recipe/getRecipeHotCatalogs"
+    getRecipeList_url = server2 + "/sfmapi/service/v1/recipe/getRecipeList"
+    data3={
+	"header":{
+		"timestamp":"2014-11-12 15:48:00",
+		"deviceCode":"1111111",
+		"ver":"v1.0",
+		"sign":"18c8c29f0898ac4b8b0a7a6afdb436aa"},
+	"data":{
+		"kw":"牛肉",
+		"order":"1",
+		"ifmax":"1"},
+	"offset":0,
+	"pageSize":20}
+    getSearchRecipe_url = server2 + "/sfmapi/service/v1/recipe/getSearchRecipe"
+    data4={
+	"header":{
+		"timestamp":"2014-11-12 15:48:00",
+		"deviceCode":"332131232",
+		"ver":"v1.0",
+		"sign":"18c8c29f0898ac4b8b0a7a6afdb436aa"},
+	"data":{
+		"kw":"鸡肉",
+		"order":"1",
+		"ifmax":"1"},
+	"offset":0,
+	"pageSize":20}
+    GetRecipeDetails_url = server2 + "/sfmapi/service/v1/recipe/getRecipe"
+    data5 = {
+	"header":{"timestamp":"2014-11-12 15:48:00","deviceCode":"BE080A300QZ225H00002","ver":"v1.0","sign":"18c8c29f0898ac4b8b0a7a6afdb436aa"},
+	"data":{"cook_id":"809327"}
     }

@@ -25,6 +25,8 @@ class MyTest(unittest.TestCase):        #封装测试环境的初始化
         message2 = {"sessionId": sessionid, "sessionData": sessiondata}
         message2_2 = Fun.merge_Two_Dicts(Login_Element.message2, message2)
         header2 = Login_Element.header2
+        print(message2_2)
+        print(type(message2_2))
         response2 = requests.post(url=self.url2, data=message2_2, headers=header2)
         print("status_code2:" + str(response2.status_code))
         #获取token请求

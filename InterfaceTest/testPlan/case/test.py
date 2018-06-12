@@ -18,8 +18,18 @@ token = Fun.take_token('../common/token.json')
 #  print("pass")
 
 
-url = BasicSupport_Element.IPLocation_url
-data = {}
-head = Fun.merge_Two_Dicts(BasicSupport_Element.header1,token)
-head2 = {'Content-Type': 'application/json','bshtoken': 'eyJ0eXBlIjoiSldUIiwiYWxnIjoiSFM1MTIifQ.eyJzdWIiOiIxMjMiLCJoYV9pZCI6IlNJRU1FTlMtS0E5Mk5QNDlUSS02OEE0MEUwMDVCQTMiLCJkZXZpY2VfY29kZSI6IjEyMzQ1Njc4OSIsImVtYWlsIjoicGNuOTBAZ3JyLmxhIn0.qyn_2zdatoqOYJUhBdJdjjZvqkv6w0aPLncNsMwg85WjGpm2JhT5_5t9IQYhSKjhVIjpb8Qegnt-4UtIiFDTaQ'}
-response = Fun.post_url(url,data={},headers = head)
+url = "https://solution.home-connect.cn/sfmapi/service/v1/recipe/getRecipeCatalogs"
+data1 = {
+	"header":{
+		"timestamp":"2014-11-12 15:48:00",
+		"deviceCode":"BE080A300QZ225H00002",
+		"ver":"v1.0",
+		"sign":"18c8c29f0898ac4b8b0a7a6afdb436aa"
+	},
+	"data":{}
+}
+data2 = json.dumps(data1)
+#data3 = json.loads(data1)
+head2 = {'Content-Type': 'application/json','bshtoken':'eyJ0eXBlIjoiSldUIiwiYWxnIjoiSFM1MTIifQ.eyJzdWIiOiIxMjMiLCJoYV9pZCI6IlNJRU1FTlMtS0E5Mk5QNDlUSS02OEE0MEUwMDVCQTMiLCJkZXZpY2VfY29kZSI6IjEyMzQ1Njc4OSIsImVtYWlsIjoicGNuOTBAZ3JyLmxhIn0.qyn_2zdatoqOYJUhBdJdjjZvqkv6w0aPLncNsMwg85WjGpm2JhT5_5t9IQYhSKjhVIjpb8Qegnt-4UtIiFDTaQ'}
+response = requests.post(url = url,data=data2 ,headers = head2)
+print(response.text)
