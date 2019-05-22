@@ -9,14 +9,14 @@ class MyTest(unittest.TestCase):        #封装测试环境的初始化
         print("-----start test Basic Support-----")
         pass
 
-    def test_1_IPLocationInterface(self):
+    def test_01_IPLocationInterface(self):
         print("IP Location Interface Test")
         token = self.token
         self.url1 = BasicSupport_Element.IPLocation_url
         head1_1 = Fun.merge_Two_Dicts(BasicSupport_Element.header1, token)
         Fun.post_url(self.url1, data={}, headers=head1_1)
 
-    def test_2_Realtimeweather(self):
+    def test_02_Realtimeweather(self):
         print("Real time weather Interface Test")
         token = self.token
         self.url2 = BasicSupport_Element.Realtimeweather_url
@@ -29,7 +29,7 @@ class MyTest(unittest.TestCase):        #封装测试环境的初始化
         print("status_code_IPLocation:" + str(response2.status_code))
         print("pass")
 
-    def test_3_WeatherforecastInterface(self):
+    def test_03_WeatherforecastInterface(self):
         print("Weather forecast Interface Test")
         token = self.token
         self.url3 = BasicSupport_Element.WeatherforecastInterface_url
@@ -42,7 +42,7 @@ class MyTest(unittest.TestCase):        #封装测试环境的初始化
         print("status_code_IPLocation:" + str(response3.status_code))
         print("pass")
 
-    def test_4_TimeSynchronizationInterface(self):
+    def test_04_TimeSynchronizationInterface(self):
         print("Time Synchronization Interface Test")
         token = self.token
         self.url4 = BasicSupport_Element.TimeSynchronization_url

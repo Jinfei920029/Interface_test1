@@ -9,7 +9,7 @@ class MyTest(unittest.TestCase):        #封装测试环境的初始化
         pass
 
 
-    def test_1_Login1(self):
+    def test_01_Login1(self):
         #开始第一个get请求获取sessionid和sessiondata
         self.url1 = Login_Element.login_url1
         params1 = Login_Element.params1

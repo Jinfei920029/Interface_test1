@@ -112,7 +112,7 @@ class Login_Element:
     header2 = {"Content-Type": "application/x-www-form-urlencoded",
                "client_id": "970F224CEB3BC18966E2A0564D00B88235FCB2753FCC9C98C1208199EF651F07"}
     header3 = {'Content-Type': 'application/x-www-form-urlencoded',
-               'ha_id': 'SIEMENS-KA92NP49TI-68A40E005BA3',
+               'ha_id': 'SIEMENS-KA92NP49TI-68A40E1451AE',
                'device_code': '123456789'}
     message2 = {"client_id": "970F224CEB3BC18966E2A0564D00B88235FCB2753FCC9C98C1208199EF651F07",
                 "email": "pcn90@grr.la",
@@ -176,3 +176,141 @@ class Recipe_Interfaces:
 	"header":{"timestamp":"2014-11-12 15:48:00","deviceCode":"BE080A300QZ225H00002","ver":"v1.0","sign":"18c8c29f0898ac4b8b0a7a6afdb436aa"},
 	"data":{"cook_id":"809327"}
     }
+    getSeasonIngredientList_url = server2+"/sfmapi/service/v1/recipe/getSeasonIngredientList"
+    data6 = data1
+    getRankingRecipe_url = server2+"/sfmapi/service/v1/recipe/getRankingRecipe"
+    data7 = {
+	"header":{
+		"timestamp":"2014-11-12 15:48:00",
+		"deviceCode":"1123123123",
+		"ver":"v1.0",
+		"sign":"18c8c29f0898ac4b8b0a7a6afdb436aa"
+	},
+	"data":{
+		"type":"remencaipu"
+	},
+	"offset":0,
+	"pageSize":20}
+    getChosenRecipe_url = server2+"/sfmapi/service/v1/recipe/getChosenRecipe"
+    data8 = {
+    "header": {
+        "timestamp": "2014-11-12 15:48:00",
+        "deviceCode": "BE080A300QZ225H00002",
+        "ver": "v1.0",
+        "sign": "18c8c29f0898ac4b8b0a7a6afdb436aa"
+    },
+    "data": {},
+    "offset": 0}
+    getHotMenus_url =server2+ "/sfmapi/service/v1/recipe/getHotMenus"
+    data9 = data1
+    getVideos_url = server2+"/sfmapi/service/v1/recipe/getVideos"
+    data10 = data8
+    getRecipeByTime_url = server2+"/sfmapi/service/v1/recipe/getRecipeByTime"
+    data11 = {
+	"header":{
+		"timestamp":"2014-11-12 15:48:00",
+		"deviceCode":"BE080A300QZ225H00002",
+		"ver":"v1.0",
+		"sign":"18c8c29f0898ac4b8b0a7a6afdb436aa"
+	},
+	"data":{
+		"kw":"午餐",
+		"nowTime":"2017-08-23 10:00:00",
+		"order":"1",
+		"ifmax":"1"
+	},
+	"offset":0,
+	"pageSize":20}
+    getRecipeByIngredients_url =server2+ "/sfmapi/service/v1/recipe/getRecipeByIngredients"
+    data12 = {
+	"header":{
+		"timestamp":"2014-11-12 15:48:00",
+		"deviceCode":"BE080A300QZ225H00002",
+		"ver":"v1.0",
+		"sign":"18c8c29f0898ac4b8b0a7a6afdb436aa"
+	},
+	"data":{
+		"kw":"西红柿 鸡蛋 豆角"
+	},
+	"offset":0,
+	"pageSize":20}
+    addCollect_url = server2+"/sfmapi/service/v1/recipe/addCollect"
+    data13 = {
+	"header":{
+		"timestamp":"2014-11-12 15:48:00",
+		"deviceCode":"BE080A300QZ225H00002",
+		"ver":"v1.0",
+		"sign":"18c8c29f0898ac4b8b0a7a6afdb436aa"
+	},
+	"data":{
+		"recipeId":"1060080",
+		"catalogId":"546d897edeba11bb88a8ae50",
+		"source":"douguo"
+	}}
+    getCollect_url =server2+ "/sfmapi/service/v1/recipe/getCollect"
+    data14 = {
+	"header":{
+		"timestamp":"2014-11-12 15:48:00",
+		"deviceCode":"BE080A300QZ225H00002",
+		"ver":"v1.0",
+		"sign":"18c8c29f0898ac4b8b0a7a6afdb436aa"
+	},
+	"data":{}}
+    delCollect_url=server2+"/sfmapi/service/v1/recipe/delCollect"
+    data15 ={
+	"header":{
+		"timestamp":"2014-11-12 15:48:00",
+		"deviceCode":"BE080A300QZ225H00002",
+		"ver":"v1.0",
+		"sign":"18c8c29f0898ac4b8b0a7a6afdb436aa"
+	},
+	"data":{
+		"source":"douguo",
+		"recipeIdList":["1060081","1060080"]
+	}}
+class ShoppingCartInterfaces:
+    server2 = "https://solution.home-connect.cn"
+    AddToCart_url = server2+"/sfmapi/service/app/v1/shoppingcart/add"
+    header1 = {'Content-Type': 'application/json'}
+    data1={
+    "header": {
+        "timestamp": "2014-11-12 15:48:00",
+        "deviceCode": "BE080A300QZ225H00001",
+        "ver": "v1.0",
+        "sign": "18c8c29f0898ac4b8b0a7a6afdb436aa"
+    },
+    "data": {
+        "productList": [{"productId": "110930","qty": 1}]
+    }}
+    DeleteItemsInShoppingCart_url=server2+"/sfmapi/service/app/v1/shoppingcart/delete"
+    data2 = {
+        "header": {
+            "timestamp": "2014-11-12 15:48:00",
+            "deviceCode": "BE080A300QZ225H00001",
+            "ver": "v1.0",
+            "sign": "18c8c29f0898ac4b8b0a7a6afdb436aa"
+        },
+        "data": {"productList": [{"productId": "69663"}]}
+    }
+    ModifyProductInShoppingCart_url=server2+"/sfmapi/service/app/v1/shoppingcart/sync"
+    data3 = {
+    "header": {
+        "timestamp": "2014-11-12 15:48:00",
+        "deviceCode": "BE080A300QZ225H00001",
+        "ver": "v1.0",
+        "sign": "18c8c29f0898ac4b8b0a7a6afdb436aa"},
+    "data": {"productList": [{"productId": "69663","qty": 1}]}
+    }
+    BrowseTheItemsInTheShoppingCart_url=server2+"/sfmapi/service/app/v1/shoppingcart/list"
+    data4 ={
+    "header": {
+        "timestamp": "2014-11-12 15:48:00",
+        "deviceCode": "BE080A300QZ225H00001",
+        "ver": "v1.0",
+        "sign": "18c8c29f0898ac4b8b0a7a6afdb436aa"
+    },
+    "data": {
+        "province": "江苏",
+        "city": "连云港",
+        "country": "白云区"
+    }}
