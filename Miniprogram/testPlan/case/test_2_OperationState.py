@@ -21,8 +21,13 @@ class MyTest(unittest.TestCase):        #封装测试环境的初始化
         response1 = requests.get(url=self.url1, params={}, headers=header1_1)
         d = json.loads(response1.text)
         assert response1.status_code == 200
-        print("pass")
-        print(response1.text)
+        assert d["msg"] == "成功", "retInfo not right"
+        assert "status" in d["data"].keys()
+        print("Get Appliance's Status pass")
+        print("response code :" + str(response1.status_code))
+        print("r.elapsed.millisecond :" + str(response1.elapsed.microseconds/1000))
+        print("response data :" + response1.text)
+
     def tearDown(self):
         print("end test")
         pass

@@ -24,6 +24,7 @@ class MyTest(unittest.TestCase):        #封装测试环境的初始化
         token = str(response["data"])
         #将字符串里的单引号替换成双引号
         token = re.sub('\'', '\"', token)
+        token = re.sub('accessToken', 'Authorization', token)
         #保存到文件token.json
         Fun.save_to_jsonfile('../common/token.json', token)
         print("status_code:" + str(r.status_code))
