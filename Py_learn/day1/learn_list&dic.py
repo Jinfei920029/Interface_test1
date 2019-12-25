@@ -22,3 +22,7 @@ print(name)
 name2 = ['a','b','c']
 name.extend(name2)#列表合并
 print(name)
+print('a'.islower())
+print('A'.isupper())
+print('+'.join(name2))#Python join() 方法用于将序列中的元素以指定的字符连接生成一个新的字符串
+print('  \nabcd'.strip())#去掉空格和回车
