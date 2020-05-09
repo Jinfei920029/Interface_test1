@@ -1,0 +1,1393 @@
+Found a 32 line (280 tokens) duplication in the following files: 
+Starting at line 268 of C:\Users\A681549\Desktop\bsh_hcwxapp_api\src\main\java\com\zencloud\bsh\service\impl\RecipesServiceImpl.java
+Starting at line 374 of C:\Users\A681549\Desktop\bsh_hcwxapp_api\src\main\java\com\zencloud\bsh\service\impl\RecipesServiceImpl.java
+
+                    return new ResultMap(ACCESSTOKEN_ERROR);
+                }
+                //判断菜谱是否点赞，收�?  首先通过redis缓存判断，如果没有则通过数据库判�?
+                Integer userRecipeLikedStatusByRedis = redisClientService.getUserRecipeStatusByRedis(RedisKeyUtils.MAP_KEY_RECIPE_LIKED, recipeId, wxUser.getId());
+                Integer userRecipeFavoritedStatusByRedis = redisClientService.getUserRecipeStatusByRedis(RedisKeyUtils.MAP_KEY_RECIPE_FAVORITED, recipeId, wxUser.getId());
+                if (ObjectUtils.isEmpty(userRecipeLikedStatusByRedis)) {
+                    //是否点赞
+                    List<WxuserRecipeLikeMapping> wxuserRecipeLikeMappings = wxuserRecipeLikeMappingMapper.selectList(new QueryWrapper<WxuserRecipeLikeMapping>().eq("recipe_id", recipeId).eq("userid", wxUser.getId()));
+                    if (!CollectionUtils.isEmpty(wxuserRecipeLikeMappings)) {
+                        vo.setHasLike(true);
+                    }
+                } else if (userRecipeLikedStatusByRedis == 1) {
+                    vo.setHasLike(true);
+                }
+                if (ObjectUtils.isEmpty(userRecipeFavoritedStatusByRedis)) {
+                    //是否收藏
+                    List<WxuserRecipeFavoriteMapping> favoriteMappings = wxuserRecipeFavoriteMappingMapper.selectList(new QueryWrapper<WxuserRecipeFavoriteMapping>().eq("recipe_id", recipeId).eq("userid", wxUser.getId()));
+                    if (!CollectionUtils.isEmpty(favoriteMappings)) {
+                        vo.setHasFavorite(true);
+                    }
+                } else if (userRecipeFavoritedStatusByRedis == 1) {
+                    vo.setHasFavorite(true);
+                }
+                Integer userRecipeLikedCountByRedis = redisClientService.getUserRecipeCountByRedis(RedisKeyUtils.MAP_KEY_RECIPE_LIKED_COUNT, recipeId);
+                Integer userRecipeFavoritedCountByRedis = redisClientService.getUserRecipeCountByRedis(RedisKeyUtils.MAP_KEY_RECIPE_FAVORITED_COUNT, recipeId);
+                if (!ObjectUtils.isEmpty(userRecipeLikedCountByRedis)) {
+                    vo.setLikeNum(vo.getLikeNum() + userRecipeLikedCountByRedis);
+                }
+                if (!ObjectUtils.isEmpty(userRecipeFavoritedCountByRedis)) {
+                    vo.setFavoriteNum(vo.getFavoriteNum() + userRecipeFavoritedCountByRedis);
+                }
+            }
+=====================================================================
+Found a 19 line (244 tokens) duplication in the following files: 
+Starting at line 116 of C:\Users\A681549\Desktop\bsh_hcwxapp_api\src\main\java\com\zencloud\bsh\service\impl\HomeappliancesServiceImpl.java
+Starting at line 283 of C:\Users\A681549\Desktop\bsh_hcwxapp_api\src\main\java\com\zencloud\bsh\service\impl\HomeappliancesServiceImpl.java
+
+            List<HomeappliancesVo> list = new ArrayList();
+            WxuserTokenMapping mapping = wxuserTokenMappingMapper.selectOne(new QueryWrapper<WxuserTokenMapping>().eq("access_token", accessToken));
+            List<WxuserHaidMapping> wxuserHaidMappings = wxuserHaidMappingMapper.selectList(new QueryWrapper<WxuserHaidMapping>().eq("loginid",mapping.getLoginid()).notIn("type", Constant.TYPE));
+            checkHomeAppliancesRelatedInfo(mapping.getLoginid(), accessToken, jsonArray, basePath, wxuserHaidMappings);
+            if (jsonArray.size() == 0 && CollectionUtils.isEmpty(wxuserHaidMappings)) {
+                saveEndLog(logInfo, null);
+                return new ResultMap();
+            }
+            wxuserHaidMappings.forEach(wxuserHaidMapping -> {
+                BlDev blDev = blDevMapper.selectOne(new QueryWrapper<BlDev>().eq("haid",wxuserHaidMapping.getHaid()));
+                if (!ObjectUtils.isEmpty(blDev)) {
+                    HomeappliancesVo vo = new HomeappliancesVo();
+                    vo.setName(wxuserHaidMapping.getHaName());
+                    vo.setBrand(blDev.getBrand());
+                    vo.setVib(blDev.getVib());
+                    vo.setType(blDev.getType());
+                    vo.setHaId(blDev.getHaid());
+                    String state = blDev.getState();
+                    if (!StringUtils.isEmpty(state) && ("1".equalsIgnoreCase(state) || "3".equalsIgnoreCase(state))) {
+=====================================================================
+Found a 23 line (187 tokens) duplication in the following files: 
+Starting at line 161 of C:\Users\A681549\Desktop\bsh_hcwxapp_api\src\main\java\com\zencloud\bsh\service\impl\HomeappliancesServiceImpl.java
+Starting at line 319 of C:\Users\A681549\Desktop\bsh_hcwxapp_api\src\main\java\com\zencloud\bsh\service\impl\HomeappliancesServiceImpl.java
+
+                    list.add(vo);
+                }
+            });
+            for (int i = 0; i < jsonArray.size(); i++) {
+                JSONObject j = jsonArray.getJSONObject(i);
+                HomeappliancesVo vo = new HomeappliancesVo();
+                vo.setName(j.getString("name"));
+                vo.setBrand(j.getString("brand"));
+                vo.setVib(j.getString("vib"));
+                vo.setConnected(j.getBoolean("connected"));
+                vo.setType(j.getString("type"));
+                vo.setEnumber(j.getString("enumber"));
+                String haid = j.getString("haId");
+                vo.setHaId(haid);
+                //查询是否分享设备
+                GuestMapping guestMapping = guestMappingMapper.selectOne(new QueryWrapper<GuestMapping>().eq("guestid", mapping.getLoginid()).eq("haid", vo.getHaId()));
+                if (null != guestMapping) {
+                    vo.setGuest(true);
+                } else {
+                    vo.setGuest(false);
+                }
+                //设置配对图片和设备类�?
+                setPicPhotoType(vo);
+=====================================================================
+Found a 16 line (173 tokens) duplication in the following files: 
+Starting at line 124 of C:\Users\A681549\Desktop\bsh_hcwxapp_api\src\main\java\com\zencloud\bsh\service\impl\MessageRecordServiceImpl.java
+Starting at line 155 of C:\Users\A681549\Desktop\bsh_hcwxapp_api\src\main\java\com\zencloud\bsh\service\impl\MessageRecordServiceImpl.java
+
+    public ResultMap updateMessageRecordReadStatus(String accessToken, IdDto idDto, HttpServletRequest request) {
+        String methodName = SERVICE_NAME + Thread.currentThread().getStackTrace()[1].getMethodName();
+        LogInfo logInfo = LogInfoUtil.createLogInfo(request, accessToken, idDto, methodName);
+        try {
+            WxuserTokenMapping wxuserTokenMapping = wxuserTokenMappingMapper.selectOne(new QueryWrapper<WxuserTokenMapping>().eq("access_token", accessToken));
+            if (ObjectUtils.isEmpty(idDto) || StringUtils.isEmpty(idDto.getId())) {
+                saveErrorLogByErrType(PARAM_ERROR, logInfo);
+                return new ResultMap(PARAM_ERROR);
+            }
+            //更新用户通知信息为已读状�?
+            MessageRecord messageRecord = messageRecordMapper.selectOne(new QueryWrapper<MessageRecord>().eq("loginid",wxuserTokenMapping.getLoginid()).eq("id",idDto.getId()));
+            if (ObjectUtils.isEmpty(messageRecord)) {
+                saveErrorLogByErrType(MESSAGE_RECORD_ERROR, logInfo);
+                return new ResultMap(MESSAGE_RECORD_ERROR);
+            }
+            if (StringUtils.isEmpty(messageRecord.getIsRead()) || !"1".equals(messageRecord.getIsRead())) {
+=====================================================================
+Found a 27 line (148 tokens) duplication in the following files: 
+Starting at line 613 of C:\Users\A681549\Desktop\bsh_hcwxapp_api\src\main\java\com\zencloud\bsh\service\impl\HomeappliancesServiceImpl.java
+Starting at line 680 of C:\Users\A681549\Desktop\bsh_hcwxapp_api\src\main\java\com\zencloud\bsh\service\impl\HomeappliancesServiceImpl.java
+Starting at line 833 of C:\Users\A681549\Desktop\bsh_hcwxapp_api\src\main\java\com\zencloud\bsh\service\impl\HomeappliancesServiceImpl.java
+
+                jsonObject = hcService.get(HA_URL + "/api/homeappliances/" + haid + "/status/" + key, getHaAccessToken(accessToken), haid, request);
+            } catch (Exception e) {
+                saveErrorLogByErrType(NET_ERROR, logInfo);
+                return new ResultMap(NET_ERROR);
+            }
+            JSONObject error = jsonObject.getJSONObject("error");
+            int code = jsonObject.getInt("resCode");
+            if (null != error && error.size() > 0) {
+                return returnResultMap(error, code, logInfo);
+            }
+            JSONObject data = jsonObject.getJSONObject("data");
+            if (null == data) {
+                saveErrorLogByErrType(GET_HOMEAPPLIANCES_ERROR, logInfo);
+                return new ResultMap(GET_HOMEAPPLIANCES_ERROR);
+            }
+
+            saveEndLog(logInfo, data);
+            return new ResultMap(SUCCESS, data);
+        } catch (Exception e) {
+            e.printStackTrace();
+            saveErrorLogByException(e, logInfo);
+            return new ResultMap(SYSTEM_ERROR);
+        }
+    }
+
+    @Override
+    public ResultMap findSettings(String accessToken, String haid, HttpServletRequest request) {
+=====================================================================
+Found a 27 line (146 tokens) duplication in the following files: 
+Starting at line 510 of C:\Users\A681549\Desktop\bsh_hcwxapp_api\src\main\java\com\zencloud\bsh\service\impl\HomeappliancesServiceImpl.java
+Starting at line 580 of C:\Users\A681549\Desktop\bsh_hcwxapp_api\src\main\java\com\zencloud\bsh\service\impl\HomeappliancesServiceImpl.java
+Starting at line 613 of C:\Users\A681549\Desktop\bsh_hcwxapp_api\src\main\java\com\zencloud\bsh\service\impl\HomeappliancesServiceImpl.java
+Starting at line 647 of C:\Users\A681549\Desktop\bsh_hcwxapp_api\src\main\java\com\zencloud\bsh\service\impl\HomeappliancesServiceImpl.java
+Starting at line 680 of C:\Users\A681549\Desktop\bsh_hcwxapp_api\src\main\java\com\zencloud\bsh\service\impl\HomeappliancesServiceImpl.java
+Starting at line 800 of C:\Users\A681549\Desktop\bsh_hcwxapp_api\src\main\java\com\zencloud\bsh\service\impl\HomeappliancesServiceImpl.java
+Starting at line 833 of C:\Users\A681549\Desktop\bsh_hcwxapp_api\src\main\java\com\zencloud\bsh\service\impl\HomeappliancesServiceImpl.java
+
+                jsonObject = hcService.get(HA_URL + "/api/homeappliances/" + url, getHaAccessToken(accessToken), haid, request);
+            } catch (Exception e) {
+                saveErrorLogByErrType(NET_ERROR, logInfo);
+                return new ResultMap(NET_ERROR);
+            }
+            JSONObject error = jsonObject.getJSONObject("error");
+            int code = jsonObject.getInt("resCode");
+            if (null != error && error.size() > 0) {
+                return returnResultMap(error, code, logInfo);
+            }
+            JSONObject data = jsonObject.getJSONObject("data");
+            if (null == data) {
+                saveErrorLogByErrType(GET_HOMEAPPLIANCES_ERROR, logInfo);
+                return new ResultMap(GET_HOMEAPPLIANCES_ERROR);
+            }
+
+            saveEndLog(logInfo, data);
+            return new ResultMap(SUCCESS, data);
+        } catch (Exception e) {
+            e.printStackTrace();
+            saveErrorLogByException(e, logInfo);
+            return new ResultMap(SYSTEM_ERROR);
+        }
+    }
+
+    @Override
+    public ResultMap updatePrograms(String url, String accessToken, Map<String, Object> paramMap, HttpServletRequest request) {
+=====================================================================
+Found a 27 line (145 tokens) duplication in the following files: 
+Starting at line 510 of C:\Users\A681549\Desktop\bsh_hcwxapp_api\src\main\java\com\zencloud\bsh\service\impl\HomeappliancesServiceImpl.java
+Starting at line 580 of C:\Users\A681549\Desktop\bsh_hcwxapp_api\src\main\java\com\zencloud\bsh\service\impl\HomeappliancesServiceImpl.java
+Starting at line 613 of C:\Users\A681549\Desktop\bsh_hcwxapp_api\src\main\java\com\zencloud\bsh\service\impl\HomeappliancesServiceImpl.java
+Starting at line 647 of C:\Users\A681549\Desktop\bsh_hcwxapp_api\src\main\java\com\zencloud\bsh\service\impl\HomeappliancesServiceImpl.java
+Starting at line 680 of C:\Users\A681549\Desktop\bsh_hcwxapp_api\src\main\java\com\zencloud\bsh\service\impl\HomeappliancesServiceImpl.java
+Starting at line 744 of C:\Users\A681549\Desktop\bsh_hcwxapp_api\src\main\java\com\zencloud\bsh\service\impl\HomeappliancesServiceImpl.java
+Starting at line 800 of C:\Users\A681549\Desktop\bsh_hcwxapp_api\src\main\java\com\zencloud\bsh\service\impl\HomeappliancesServiceImpl.java
+Starting at line 833 of C:\Users\A681549\Desktop\bsh_hcwxapp_api\src\main\java\com\zencloud\bsh\service\impl\HomeappliancesServiceImpl.java
+
+                jsonObject = hcService.get(HA_URL + "/api/homeappliances/" + url, getHaAccessToken(accessToken), haid, request);
+            } catch (Exception e) {
+                saveErrorLogByErrType(NET_ERROR, logInfo);
+                return new ResultMap(NET_ERROR);
+            }
+            JSONObject error = jsonObject.getJSONObject("error");
+            int code = jsonObject.getInt("resCode");
+            if (null != error && error.size() > 0) {
+                return returnResultMap(error, code, logInfo);
+            }
+            JSONObject data = jsonObject.getJSONObject("data");
+            if (null == data) {
+                saveErrorLogByErrType(GET_HOMEAPPLIANCES_ERROR, logInfo);
+                return new ResultMap(GET_HOMEAPPLIANCES_ERROR);
+            }
+
+            saveEndLog(logInfo, data);
+            return new ResultMap(SUCCESS, data);
+        } catch (Exception e) {
+            e.printStackTrace();
+            saveErrorLogByException(e, logInfo);
+            return new ResultMap(SYSTEM_ERROR);
+        }
+    }
+
+    @Override
+    public ResultMap updatePrograms(String url, String accessToken, Map<String, Object> paramMap, HttpServletRequest request) {
+=====================================================================
+Found a 16 line (143 tokens) duplication in the following files: 
+Starting at line 1180 of C:\Users\A681549\Desktop\bsh_hcwxapp_api\src\main\java\com\zencloud\bsh\service\impl\HomeappliancesServiceImpl.java
+Starting at line 1612 of C:\Users\A681549\Desktop\bsh_hcwxapp_api\src\main\java\com\zencloud\bsh\service\impl\HomeappliancesServiceImpl.java
+
+    public ResultMap findHaidProgramScope(String accessToken, String haid, HttpServletRequest request) {
+        String methodName = SERVICE_NAME + Thread.currentThread().getStackTrace()[1].getMethodName();
+        LogInfo logInfo = LogInfoUtil.createLogInfo(request, accessToken, null, haid, methodName);
+        setCategoryByLog(logInfo);
+        try {
+            String vib = null;
+            if (!StringUtil.isEmpty(haid)) {
+                vib = haid.split("-")[1];
+            }
+            WxVib wxVib = wxVibMapper.selectOne(new QueryWrapper<WxVib>().eq("cname", vib));
+            if(null == wxVib){
+                saveErrorLogByErrType(GET_VIB_ERROR, logInfo);
+                return new ResultMap(GET_VIB_ERROR);
+            }
+            Category category = categoryMapper.selectById(wxVib.getCategoryid());
+            List<ProgramScopeResVo> list = new ArrayList<>();
+=====================================================================
+Found a 18 line (142 tokens) duplication in the following files: 
+Starting at line 627 of C:\Users\A681549\Desktop\bsh_hcwxapp_api\src\main\java\com\zencloud\bsh\service\impl\ShareServiceImpl.java
+Starting at line 655 of C:\Users\A681549\Desktop\bsh_hcwxapp_api\src\main\java\com\zencloud\bsh\service\impl\ShareServiceImpl.java
+
+                for (GuestMapping guestMapping : shareMappings) {
+                    GuestListVo guestListVo = new GuestListVo();
+                    String haid = guestMapping.getHaid();
+                    String vib = haid.split("-")[1];
+                    //先判断是否已查询了略缩图，避免重复查�?
+                    String icon = icons.get(vib);
+                    if (null == icon) {
+                        WxVib wxVib = wxVibMapper.selectOne(new QueryWrapper<WxVib>().eq("cname", vib));
+                        if (null != wxVib) {
+                            icon = wxVib.getPic();
+                        }
+                        icons.put(vib, icon);
+                    }
+                    guestListVo.setHaid(haid);
+                    guestListVo.setIcon(icon);
+                    guestListVo.setStatus("Accepted");
+                    guestListVo.setAcceptTime(DateTimeUtil.formatDateTime(DateTimeUtil.addTime(DateTimeUtil.getDate(guestMapping.getCdate()), 8, 0, 0)));
+                    guestListVo.setHaName(guestMapping.getHaName());
+=====================================================================
+Found a 18 line (136 tokens) duplication in the following files: 
+Starting at line 260 of C:\Users\A681549\Desktop\bsh_hcwxapp_api\src\main\java\com\zencloud\bsh\service\impl\HomeappliancesServiceImpl.java
+Starting at line 1142 of C:\Users\A681549\Desktop\bsh_hcwxapp_api\src\main\java\com\zencloud\bsh\service\impl\HomeappliancesServiceImpl.java
+
+    public ResultMap findHomeappliancesSimple(String accessToken, String basePath, HttpServletRequest request) {
+        String methodName = SERVICE_NAME + Thread.currentThread().getStackTrace()[1].getMethodName();
+        LogInfo logInfo = LogInfoUtil.createLogInfo(request, accessToken, null, methodName);
+        try {
+            JSONObject jsonObject = null;
+            try {
+                jsonObject = hcService.findHomeappliances(getHaAccessToken(accessToken), request);
+            } catch (Exception e) {
+                saveErrorLogByErrType(NET_ERROR, logInfo);
+                return new ResultMap(NET_ERROR);
+            }
+            JSONObject error = jsonObject.getJSONObject("error");
+            int code = jsonObject.getInt("resCode");
+            if (null != error && error.size() > 0) {
+                return returnResultMap(error, code, logInfo);
+            }
+            JSONObject data = jsonObject.getJSONObject("data");
+            if (ObjectUtils.isEmpty(data)) {
+=====================================================================
+Found a 17 line (135 tokens) duplication in the following files: 
+Starting at line 139 of C:\Users\A681549\Desktop\bsh_hcwxapp_api\src\main\java\com\zencloud\bsh\service\impl\HomeappliancesServiceImpl.java
+Starting at line 372 of C:\Users\A681549\Desktop\bsh_hcwxapp_api\src\main\java\com\zencloud\bsh\service\impl\HomeappliancesServiceImpl.java
+
+                        vo.setConnected(true);
+                    } else {
+                        vo.setConnected(false);
+                    }
+                    //查询是否分享设备
+                    GuestMapping guestMapping = guestMappingMapper.selectOne(new QueryWrapper<GuestMapping>().eq("guestid", mapping.getLoginid()).eq("haid", vo.getHaId()));
+                    if (null != guestMapping) {
+                        vo.setGuest(true);
+                    } else {
+                        vo.setGuest(false);
+                    }
+                    //设置配对图片和设备类�?
+                    setPicPhotoType(vo);
+                    vo.setPowerState(blDev.getPowerState());
+                    vo.setRemoteControl(blDev.getRemoteControlActive());
+                    vo.setOperationState(blDev.getOperationState());
+                    if (STATE_RUN.equalsIgnoreCase(vo.getOperationState()) || STATE_DELAYED_START.equalsIgnoreCase(vo.getOperationState())) {
+=====================================================================
+Found a 25 line (135 tokens) duplication in the following files: 
+Starting at line 712 of C:\Users\A681549\Desktop\bsh_hcwxapp_api\src\main\java\com\zencloud\bsh\service\impl\HomeappliancesServiceImpl.java
+Starting at line 866 of C:\Users\A681549\Desktop\bsh_hcwxapp_api\src\main\java\com\zencloud\bsh\service\impl\HomeappliancesServiceImpl.java
+
+                jsonObject = hcService.put(HA_URL + "/api/homeappliances/" + haid + "/settings/" + key, getHaAccessToken(accessToken), paramMap, haid, request);
+            } catch (Exception e) {
+                saveErrorLogByErrType(NET_ERROR, logInfo);
+                return new ResultMap(NET_ERROR);
+            }
+            if (null == jsonObject) {
+                saveEndLog(logInfo, null);
+                return new ResultMap();
+            }
+            JSONObject error = jsonObject.getJSONObject("error");
+            int code = jsonObject.getInt("resCode");
+            if (null != error && error.size() > 0) {
+                return returnResultMap(error, code, logInfo);
+            }
+
+            saveEndLog(logInfo, null);
+            return new ResultMap();
+        } catch (Exception e) {
+            e.printStackTrace();
+            saveErrorLogByException(e, logInfo);
+            return new ResultMap(SYSTEM_ERROR);
+        }
+    }
+
+    @Override
+=====================================================================
+Found a 7 line (131 tokens) duplication in the following files: 
+Starting at line 119 of C:\Users\A681549\Desktop\bsh_hcwxapp_api\src\main\java\com\zencloud\bsh\service\impl\RecipesServiceImpl.java
+Starting at line 173 of C:\Users\A681549\Desktop\bsh_hcwxapp_api\src\main\java\com\zencloud\bsh\service\impl\RecipesServiceImpl.java
+
+                RecipeInfo recipeInfo = recipeInfoMapper.selectById(recipesVo.getRecipeid());
+                //图片
+                List<RecipePictureVo> pictures = new ArrayList<>();
+                pictures.add(new RecipePictureVo("Bosch", StringUtil.isEmpty(recipeInfo.getBoPic()) ? null : recipeInfo.getBoPic()));
+                pictures.add(new RecipePictureVo("Siemens", StringUtil.isEmpty(recipeInfo.getSePic()) ? null : recipeInfo.getSePic()));
+                pictures.add(new RecipePictureVo("General", StringUtil.isEmpty(recipeInfo.getGeneralPic()) ? null : recipeInfo.getGeneralPic()));
+                pictures.add(new RecipePictureVo("Homeconnect", StringUtil.isEmpty(recipeInfo.getHcPic()) ? null : recipeInfo.getHcPic()));
+=====================================================================
+Found a 6 line (129 tokens) duplication in the following files: 
+Starting at line 245 of C:\Users\A681549\Desktop\bsh_hcwxapp_api\src\main\java\com\zencloud\bsh\service\impl\HomeappliancesServiceImpl.java
+Starting at line 155 of C:\Users\A681549\Desktop\bsh_hcwxapp_api\src\main\java\com\zencloud\bsh\service\impl\InstallGuideServiceImpl.java
+
+        Category category = categoryMapper.selectOne(new QueryWrapper<Category>().eq("cname", type));
+        if(null != category){
+            WxPlatform wxPlatform = wxPlatformMapper.selectOne(new QueryWrapper<WxPlatform>().eq("cname", "general").eq("categoryid",category.getId()));
+            if(null != wxPlatform){
+                List<WxVib> wxVibs = wxVibMapper.selectList(new QueryWrapper<WxVib>().eq("categoryId", category.getId()).eq("platformId", wxPlatform.getId()).isNull("brand"));
+                if(null != wxVibs && wxVibs.size() > 0){
+=====================================================================
+Found a 23 line (129 tokens) duplication in the following files: 
+Starting at line 972 of C:\Users\A681549\Desktop\bsh_hcwxapp_api\src\main\java\com\zencloud\bsh\service\impl\HomeappliancesServiceImpl.java
+Starting at line 1004 of C:\Users\A681549\Desktop\bsh_hcwxapp_api\src\main\java\com\zencloud\bsh\service\impl\HomeappliancesServiceImpl.java
+
+                jsonObject = hcService.delete(HA_URL + "/api/homeappliances/" + haid + "/triggers", getHaAccessToken(accessToken), haid, request);
+            } catch (Exception e) {
+                saveErrorLogByErrType(NET_ERROR, logInfo);
+                return new ResultMap(NET_ERROR);
+            }
+            if (null == jsonObject) {
+                saveEndLog(logInfo, null);
+                return new ResultMap();
+            }
+            JSONObject error = jsonObject.getJSONObject("error");
+            int code = jsonObject.getInt("resCode");
+            if (null != error && error.size() > 0) {
+                return returnResultMap(error, code, logInfo);
+            }
+
+            saveEndLog(logInfo, null);
+            return new ResultMap();
+        } catch (Exception e) {
+            e.printStackTrace();
+            saveErrorLogByException(e, logInfo);
+            return new ResultMap(SYSTEM_ERROR);
+        }
+    }
+=====================================================================
+Found a 13 line (128 tokens) duplication in the following files: 
+Starting at line 112 of C:\Users\A681549\Desktop\bsh_hcwxapp_api\src\main\java\com\zencloud\bsh\service\impl\ArticleServiceImpl.java
+Starting at line 150 of C:\Users\A681549\Desktop\bsh_hcwxapp_api\src\main\java\com\zencloud\bsh\service\impl\ArticleServiceImpl.java
+
+    public ResultMap articleLike(int articleid, String accessToken, HttpServletRequest request) {
+        String methodName = SERVICE_NAME + Thread.currentThread().getStackTrace()[1].getMethodName();
+        LogInfo logInfo = LogInfoUtil.createLogInfo(request, accessToken, articleid, methodName);
+        try {
+            Article article = articleMapper.selectById(articleid);
+            if (null == article) {
+                saveErrorLogByErrType(GET_ARTICLE_ERROR, logInfo);
+                return new ResultMap(GET_ARTICLE_ERROR);
+            }
+            WxuserTokenMapping wxuserTokenMapping = wxuserTokenMappingMapper.selectOne(new QueryWrapper<WxuserTokenMapping>().eq("access_token", accessToken));
+            WxUser wxUser = wxUserMapper.selectOne(new QueryWrapper<WxUser>().eq("loginid",wxuserTokenMapping.getLoginid()));
+            //若已喜欢则取消喜�?
+            List<WxuserArticleLikeMapping> oldMappings = wxuserArticleLikeMappingMapper.selectList(new QueryWrapper<WxuserArticleLikeMapping>().eq("userid", wxUser.getId()).eq("articleid", articleid));
+=====================================================================
+Found a 26 line (128 tokens) duplication in the following files: 
+Starting at line 712 of C:\Users\A681549\Desktop\bsh_hcwxapp_api\src\main\java\com\zencloud\bsh\service\impl\HomeappliancesServiceImpl.java
+Starting at line 972 of C:\Users\A681549\Desktop\bsh_hcwxapp_api\src\main\java\com\zencloud\bsh\service\impl\HomeappliancesServiceImpl.java
+
+                jsonObject = hcService.put(HA_URL + "/api/homeappliances/" + haid + "/settings/" + key, getHaAccessToken(accessToken), paramMap, haid, request);
+            } catch (Exception e) {
+                saveErrorLogByErrType(NET_ERROR, logInfo);
+                return new ResultMap(NET_ERROR);
+            }
+            if (null == jsonObject) {
+                saveEndLog(logInfo, null);
+                return new ResultMap();
+            }
+            JSONObject error = jsonObject.getJSONObject("error");
+            int code = jsonObject.getInt("resCode");
+            if (null != error && error.size() > 0) {
+                return returnResultMap(error, code, logInfo);
+            }
+
+            saveEndLog(logInfo, null);
+            return new ResultMap();
+        } catch (Exception e) {
+            e.printStackTrace();
+            saveErrorLogByException(e, logInfo);
+            return new ResultMap(SYSTEM_ERROR);
+        }
+    }
+
+    @Override
+    public ResultMap findImages(String accessToken, String haid, HttpServletRequest request) {
+=====================================================================
+Found a 13 line (128 tokens) duplication in the following files: 
+Starting at line 431 of C:\Users\A681549\Desktop\bsh_hcwxapp_api\src\main\java\com\zencloud\bsh\service\impl\RecipesServiceImpl.java
+Starting at line 513 of C:\Users\A681549\Desktop\bsh_hcwxapp_api\src\main\java\com\zencloud\bsh\service\impl\RecipesServiceImpl.java
+
+    public ResultMap recipeLike(Integer recipeId, String accessToken, HttpServletRequest request) {
+        String methodName = SERVICE_NAME + Thread.currentThread().getStackTrace()[1].getMethodName();
+        LogInfo logInfo = LogInfoUtil.createLogInfo(request, accessToken, recipeId, methodName);
+        try {
+            RecipeInfo recipeInfo = recipeInfoMapper.selectById(recipeId);
+            if (null == recipeId) {
+                saveErrorLogByErrType(GET_RECIPE_ERROR, logInfo);
+                return new ResultMap(GET_RECIPE_ERROR);
+            }
+            WxuserTokenMapping wxuserTokenMapping = wxuserTokenMappingMapper.selectOne(new QueryWrapper<WxuserTokenMapping>().eq("access_token", accessToken));
+            WxUser wxUser = wxUserMapper.selectOne(new QueryWrapper<WxUser>().eq("loginid",wxuserTokenMapping.getLoginid()));
+            //若已点赞则取消点�?
+            List<WxuserRecipeLikeMapping> oldLikeMappings = wxuserRecipeLikeMappingMapper.selectList(new QueryWrapper<WxuserRecipeLikeMapping>().eq("recipe_id", recipeId).eq("userid", wxUser.getId()));
+=====================================================================
+Found a 19 line (127 tokens) duplication in the following files: 
+Starting at line 98 of C:\Users\A681549\Desktop\bsh_hcwxapp_api\src\main\java\com\zencloud\bsh\service\impl\HomeappliancesServiceImpl.java
+Starting at line 265 of C:\Users\A681549\Desktop\bsh_hcwxapp_api\src\main\java\com\zencloud\bsh\service\impl\HomeappliancesServiceImpl.java
+
+            try {
+                jsonObject = hcService.findHomeappliances(getHaAccessToken(accessToken), request);
+            } catch (Exception e) {
+                saveErrorLogByErrType(NET_ERROR, logInfo);
+                return new ResultMap(NET_ERROR);
+            }
+            JSONObject error = jsonObject.getJSONObject("error");
+            int code = jsonObject.getInt("resCode");
+            if (null != error && error.size() > 0) {
+                return returnResultMap(error, code, logInfo);
+            }
+            JSONObject data = jsonObject.getJSONObject("data");
+            if (ObjectUtils.isEmpty(data)) {
+                saveErrorLogByErrType(GET_HOMEAPPLIANCES_ERROR, logInfo);
+                return new ResultMap(GET_HOMEAPPLIANCES_ERROR);
+            }
+
+            JSONArray jsonArray = data.getJSONArray("homeappliances");
+            List<HomeappliancesVo> list = new ArrayList();
+=====================================================================
+Found a 15 line (127 tokens) duplication in the following files: 
+Starting at line 1698 of C:\Users\A681549\Desktop\bsh_hcwxapp_api\src\main\java\com\zencloud\bsh\service\impl\HomeappliancesServiceImpl.java
+Starting at line 171 of C:\Users\A681549\Desktop\bsh_hcwxapp_api\src\main\java\com\zencloud\bsh\service\impl\ShareServiceImpl.java
+
+    }
+
+    private ResultMap returnResultMap(JSONObject errorObject, int code, LogInfo logInfo) {
+        Map<String, Object> errorMsg = new HashMap<>();
+        if (null != errorObject.get("key")) {
+            String key = errorObject.getString("key");
+            errorMsg.put("key", key);
+        } else if (null != errorObject.get("code")) {
+            String errorCode = errorObject.getString("code");
+            errorMsg.put("code", errorCode);
+        }
+        String description = errorObject.getString("description");
+        errorMsg.put("description", description);
+        LogInfoUtil.setResponse(logInfo, null, null);
+        logInfo.setErrorMsg(errorMsg.toString());
+=====================================================================
+Found a 25 line (126 tokens) duplication in the following files: 
+Starting at line 866 of C:\Users\A681549\Desktop\bsh_hcwxapp_api\src\main\java\com\zencloud\bsh\service\impl\HomeappliancesServiceImpl.java
+Starting at line 972 of C:\Users\A681549\Desktop\bsh_hcwxapp_api\src\main\java\com\zencloud\bsh\service\impl\HomeappliancesServiceImpl.java
+
+                jsonObject = hcService.put(HA_URL + "/api/homeappliances/" + haid + "/commands/" + key, getHaAccessToken(accessToken), paramMap, haid, request);
+            } catch (Exception e) {
+                saveErrorLogByErrType(NET_ERROR, logInfo);
+                return new ResultMap(NET_ERROR);
+            }
+            if (null == jsonObject) {
+                saveEndLog(logInfo, null);
+                return new ResultMap();
+            }
+            JSONObject error = jsonObject.getJSONObject("error");
+            int code = jsonObject.getInt("resCode");
+            if (null != error && error.size() > 0) {
+                return returnResultMap(error, code, logInfo);
+            }
+
+            saveEndLog(logInfo, null);
+            return new ResultMap();
+        } catch (Exception e) {
+            e.printStackTrace();
+            saveErrorLogByException(e, logInfo);
+            return new ResultMap(SYSTEM_ERROR);
+        }
+    }
+
+    @Override
+=====================================================================
+Found a 23 line (124 tokens) duplication in the following files: 
+Starting at line 712 of C:\Users\A681549\Desktop\bsh_hcwxapp_api\src\main\java\com\zencloud\bsh\service\impl\HomeappliancesServiceImpl.java
+Starting at line 866 of C:\Users\A681549\Desktop\bsh_hcwxapp_api\src\main\java\com\zencloud\bsh\service\impl\HomeappliancesServiceImpl.java
+Starting at line 1004 of C:\Users\A681549\Desktop\bsh_hcwxapp_api\src\main\java\com\zencloud\bsh\service\impl\HomeappliancesServiceImpl.java
+
+                jsonObject = hcService.put(HA_URL + "/api/homeappliances/" + haid + "/settings/" + key, getHaAccessToken(accessToken), paramMap, haid, request);
+            } catch (Exception e) {
+                saveErrorLogByErrType(NET_ERROR, logInfo);
+                return new ResultMap(NET_ERROR);
+            }
+            if (null == jsonObject) {
+                saveEndLog(logInfo, null);
+                return new ResultMap();
+            }
+            JSONObject error = jsonObject.getJSONObject("error");
+            int code = jsonObject.getInt("resCode");
+            if (null != error && error.size() > 0) {
+                return returnResultMap(error, code, logInfo);
+            }
+
+            saveEndLog(logInfo, null);
+            return new ResultMap();
+        } catch (Exception e) {
+            e.printStackTrace();
+            saveErrorLogByException(e, logInfo);
+            return new ResultMap(SYSTEM_ERROR);
+        }
+    }
+=====================================================================
+Found a 16 line (123 tokens) duplication in the following files: 
+Starting at line 55 of C:\Users\A681549\Desktop\bsh_hcwxapp_api\src\main\java\com\zencloud\bsh\service\impl\InstallGuideServiceImpl.java
+Starting at line 91 of C:\Users\A681549\Desktop\bsh_hcwxapp_api\src\main\java\com\zencloud\bsh\service\impl\InstallGuideServiceImpl.java
+
+            List<WxVib> vibs = wxVibMapper.selectList(new QueryWrapper<WxVib>().eq("categoryid", c.getId()));
+            if (CollectionUtils.isEmpty(vibs)) {
+                saveErrorLogByErrType(GET_VIBS_ERROR, logInfo);
+                return new ResultMap(GET_VIBS_ERROR);
+            }
+            List<VibVo> list = new ArrayList<>();
+            vibs.parallelStream().forEach((s) -> {
+                VibVo vo = new VibVo();
+                vo.setVib(s.getCname());
+                vo.setPhoto(s.getPhoto());
+                vo.setPic(s.getPic());
+                vo.setOptional(s.getOptional());
+                list.add(vo);
+            });
+            Map<String, Object> map = new HashMap<>();
+            map.put("category", list);
+=====================================================================
+Found a 22 line (121 tokens) duplication in the following files: 
+Starting at line 593 of C:\Users\A681549\Desktop\bsh_hcwxapp_api\src\main\java\com\zencloud\bsh\service\impl\ShareServiceImpl.java
+Starting at line 715 of C:\Users\A681549\Desktop\bsh_hcwxapp_api\src\main\java\com\zencloud\bsh\service\impl\WxAccountServiceImpl.java
+
+            }
+            saveEndLog(logInfo, null);
+            return new ResultMap();
+        } catch (Exception e) {
+            e.printStackTrace();
+            saveErrorLogByException(e, logInfo);
+            return new ResultMap(SYSTEM_ERROR);
+        }
+    }
+
+    //清除设备对应�? tips
+    private void deleteNotificationTips(String loginid, String haid) {
+        List<NotificationTips> list = notificationTipsService.list(new QueryWrapper<NotificationTips>().eq("loginid", loginid).eq("haid",haid));
+        if (!CollectionUtils.isEmpty(list)) {
+            list.forEach(noti ->{
+                notificationTipsMapper.deleteById(noti);
+                redisService.deleteNoticaitionTips(noti.getId());
+            });
+        }
+    }
+
+    @Override
+=====================================================================
+Found a 19 line (119 tokens) duplication in the following files: 
+Starting at line 16 of C:\Users\A681549\Desktop\bsh_hcwxapp_api\src\main\java\com\zencloud\bsh\service\impl\BaseServiceImpl.java
+Starting at line 226 of C:\Users\A681549\Desktop\bsh_hcwxapp_api\src\main\java\com\zencloud\bsh\service\impl\NotificationTipsServiceImpl.java
+
+        logInfo.setExceptionLine(e.getStackTrace()[0].toString());
+        LogInfoUtil.setResponse(logInfo, null, null);
+        logInfo.setLevel("error");
+        logger.error(logInfo.toString());
+    }
+
+    protected void saveErrorLogByErrType(ErrType e, LogInfo logInfo) {
+        logInfo.setErrorMsg(e.getErrmsg());
+        LogInfoUtil.setResponse(logInfo, null, null);
+        logInfo.setLevel("error");
+        logger.error(logInfo.toString());
+    }
+
+    protected void saveEndLog(LogInfo logInfo, Object response) {
+        LogInfoUtil.setResponse(logInfo, response, null);
+        logInfo.setLevel("info");
+        logger.info(logInfo.toString());
+    }
+}
+=====================================================================
+Found a 25 line (119 tokens) duplication in the following files: 
+Starting at line 273 of C:\Users\A681549\Desktop\bsh_hcwxapp_api\src\main\java\com\zencloud\bsh\service\impl\WxAccountServiceImpl.java
+Starting at line 303 of C:\Users\A681549\Desktop\bsh_hcwxapp_api\src\main\java\com\zencloud\bsh\service\impl\WxAccountServiceImpl.java
+
+                jsonObject = hcaService.requestPin(requestPinDto, request);
+            } catch (Exception e) {
+                saveErrorLogByErrType(NET_ERROR, logInfo);
+                return new ResultMap(NET_ERROR);
+            }
+            if (null == jsonObject) {
+                LogInfoUtil.setResponse(logInfo, null, null);
+                return new ResultMap();
+            }
+            JSONObject error = jsonObject.getJSONObject("error");
+
+            if (null != error && error.size() > 0) {
+                return returnResultMap(error, logInfo);
+            }
+            saveEndLog(logInfo, null);
+            return new ResultMap();
+        } catch (Exception e) {
+            e.printStackTrace();
+            saveErrorLogByException(e, logInfo);
+            return new ResultMap(SYSTEM_ERROR);
+        }
+    }
+
+    @Override
+    public ResultMap confirmPin(ConfirmPinDto confirmPinDto, HttpServletRequest request) {
+=====================================================================
+Found a 10 line (116 tokens) duplication in the following files: 
+Starting at line 46 of C:\Users\A681549\Desktop\bsh_hcwxapp_api\src\main\java\com\zencloud\bsh\service\impl\InstallGuideServiceImpl.java
+Starting at line 82 of C:\Users\A681549\Desktop\bsh_hcwxapp_api\src\main\java\com\zencloud\bsh\service\impl\InstallGuideServiceImpl.java
+
+    public ResultMap listCategory(String category, String accessToken, HttpServletRequest request) {
+        String methodName = SERVICE_NAME + Thread.currentThread().getStackTrace()[1].getMethodName();
+        LogInfo logInfo = LogInfoUtil.createLogInfo(request, accessToken, category, methodName);
+        try {
+            Category c = categoryMapper.selectOne(new QueryWrapper<Category>().eq("cname", category));
+            if (null == c) {
+                saveErrorLogByErrType(GET_CATEGORY_ERROR, logInfo);
+                return new ResultMap(GET_CATEGORY_ERROR);
+            }
+            List<WxVib> vibs = wxVibMapper.selectList(new QueryWrapper<WxVib>().eq("categoryid", c.getId()));
+=====================================================================
+Found a 12 line (116 tokens) duplication in the following files: 
+Starting at line 83 of C:\Users\A681549\Desktop\bsh_hcwxapp_api\src\main\java\com\zencloud\bsh\service\impl\WxuserSignInServiceImpl.java
+Starting at line 159 of C:\Users\A681549\Desktop\bsh_hcwxapp_api\src\main\java\com\zencloud\bsh\service\impl\WxuserSignInServiceImpl.java
+
+    public ResultMap getUserSignInAndSomeTask(String accessToken, HttpServletRequest request) {
+        String methodName = SERVICE_NAME + Thread.currentThread().getStackTrace()[1].getMethodName();
+        LogInfo logInfo = LogInfoUtil.createLogInfo(request, accessToken, null, methodName);
+        try {
+            WxuserTokenMapping wxuserTokenMapping = wxuserTokenMappingMapper.selectOne(new QueryWrapper<WxuserTokenMapping>().eq("access_token",accessToken));
+            Map<String,Object> map = new HashMap<>();
+            //第一步：获取用户信息 设备，保证密码是有效 �? accessToken有效
+            WxuserSignInVo wxuserSignInVo = new WxuserSignInVo();
+            ResultMap userInfo = getUserInfo(wxuserSignInVo, wxuserTokenMapping, request, logInfo);
+            if (userInfo.getCode() != 0 ) {
+                return userInfo;
+            }
+=====================================================================
+Found a 9 line (115 tokens) duplication in the following files: 
+Starting at line 468 of C:\Users\A681549\Desktop\bsh_hcwxapp_api\src\main\java\com\zencloud\bsh\service\impl\RecipesServiceImpl.java
+Starting at line 550 of C:\Users\A681549\Desktop\bsh_hcwxapp_api\src\main\java\com\zencloud\bsh\service\impl\RecipesServiceImpl.java
+
+    public ResultMap recipeLikes(Integer recipeId, LikeStatusDto likeStatusDto, String accessToken, HttpServletRequest request) {
+        try {
+            Integer status = likeStatusDto.getStatus();
+            if (ObjectUtils.isEmpty(recipeId) || ObjectUtils.isEmpty(status) || (status != 1 && status !=0)) {
+                return new ResultMap(PARAM_ERROR);
+            }
+            WxuserTokenMapping wxuserTokenMapping = wxuserTokenMappingMapper.selectOne(new QueryWrapper<WxuserTokenMapping>().eq("access_token", accessToken));
+            WxUser wxUser = wxUserMapper.selectOne(new QueryWrapper<WxUser>().eq("loginid",wxuserTokenMapping.getLoginid()));
+            Integer likeStatus = redisClientService.getUserRecipeStatusByRedis(RedisKeyUtils.MAP_KEY_RECIPE_LIKED, recipeId, wxUser.getId());
+=====================================================================
+Found a 24 line (113 tokens) duplication in the following files: 
+Starting at line 550 of C:\Users\A681549\Desktop\bsh_hcwxapp_api\src\main\java\com\zencloud\bsh\service\impl\HomeappliancesServiceImpl.java
+Starting at line 714 of C:\Users\A681549\Desktop\bsh_hcwxapp_api\src\main\java\com\zencloud\bsh\service\impl\HomeappliancesServiceImpl.java
+Starting at line 974 of C:\Users\A681549\Desktop\bsh_hcwxapp_api\src\main\java\com\zencloud\bsh\service\impl\HomeappliancesServiceImpl.java
+
+                saveErrorLogByException(e, logInfo);
+                return new ResultMap(NET_ERROR);
+            }
+            if (null == jsonObject) {
+                saveEndLog(logInfo, null);
+                return new ResultMap();
+            }
+            JSONObject error = jsonObject.getJSONObject("error");
+            int code = jsonObject.getInt("resCode");
+            if (null != error && error.size() > 0) {
+                return returnResultMap(error, code, logInfo);
+            }
+
+            saveEndLog(logInfo, null);
+            return new ResultMap();
+        } catch (Exception e) {
+            e.printStackTrace();
+            saveErrorLogByException(e, logInfo);
+            return new ResultMap(SYSTEM_ERROR);
+        }
+    }
+
+    @Override
+    public ResultMap findStatus(String accessToken, String haid, HttpServletRequest request) {
+=====================================================================
+Found a 13 line (113 tokens) duplication in the following files: 
+Starting at line 1700 of C:\Users\A681549\Desktop\bsh_hcwxapp_api\src\main\java\com\zencloud\bsh\service\impl\HomeappliancesServiceImpl.java
+Starting at line 140 of C:\Users\A681549\Desktop\bsh_hcwxapp_api\src\main\java\com\zencloud\bsh\service\impl\NotificationTipsServiceImpl.java
+Starting at line 172 of C:\Users\A681549\Desktop\bsh_hcwxapp_api\src\main\java\com\zencloud\bsh\service\impl\ShareServiceImpl.java
+
+    private ResultMap returnResultMap(JSONObject errorObject, int code, LogInfo logInfo) {
+        Map<String, Object> errorMsg = new HashMap<>();
+        if (null != errorObject.get("key")) {
+            String key = errorObject.getString("key");
+            errorMsg.put("key", key);
+        } else if (null != errorObject.get("code")) {
+            String errorCode = errorObject.getString("code");
+            errorMsg.put("code", errorCode);
+        }
+        String description = errorObject.getString("description");
+        errorMsg.put("description", description);
+        LogInfoUtil.setResponse(logInfo, null, null);
+        logInfo.setErrorMsg(errorMsg.toString());
+=====================================================================
+Found a 23 line (111 tokens) duplication in the following files: 
+Starting at line 550 of C:\Users\A681549\Desktop\bsh_hcwxapp_api\src\main\java\com\zencloud\bsh\service\impl\HomeappliancesServiceImpl.java
+Starting at line 868 of C:\Users\A681549\Desktop\bsh_hcwxapp_api\src\main\java\com\zencloud\bsh\service\impl\HomeappliancesServiceImpl.java
+
+                saveErrorLogByException(e, logInfo);
+                return new ResultMap(NET_ERROR);
+            }
+            if (null == jsonObject) {
+                saveEndLog(logInfo, null);
+                return new ResultMap();
+            }
+            JSONObject error = jsonObject.getJSONObject("error");
+            int code = jsonObject.getInt("resCode");
+            if (null != error && error.size() > 0) {
+                return returnResultMap(error, code, logInfo);
+            }
+
+            saveEndLog(logInfo, null);
+            return new ResultMap();
+        } catch (Exception e) {
+            e.printStackTrace();
+            saveErrorLogByException(e, logInfo);
+            return new ResultMap(SYSTEM_ERROR);
+        }
+    }
+
+    @Override
+=====================================================================
+Found a 26 line (110 tokens) duplication in the following files: 
+Starting at line 96 of C:\Users\A681549\Desktop\bsh_hcwxapp_api\src\main\java\com\zencloud\bsh\util\WxUtil.java
+Starting at line 133 of C:\Users\A681549\Desktop\bsh_hcwxapp_api\src\main\java\com\zencloud\bsh\util\WxUtil.java
+
+        logger.info("*****************  请求发�?��?�知信息 ******************");
+        logger.info("url�?" + url);
+        logger.info("body�?" + JSONObject.fromObject(reqMap).toString());
+        HttpClientBuilder httpClientBuilder = HttpClientBuilder.create();
+        CloseableHttpClient client = httpClientBuilder.build();
+        HttpPost httpPost = getHttpPost(url);
+        httpPost.setEntity(objectToEntity(reqMap));
+
+        CloseableHttpResponse response = client.execute(httpPost);
+        JSONObject object = getEntityToJson(response);
+        logger.info(object.toString());
+        MsgResultMap msgResultMap = (MsgResultMap) JSONObject.toBean(object, MsgResultMap.class);
+        return msgResultMap;
+    }
+
+    /**
+     * 发�?�订阅消�?
+     * @param assessToken token
+     * @param openId openid
+     * @param templateId 模板 id
+     * @param data 数据�?
+     * @param page 跳转�?
+     * @return
+     * @throws Exception
+     */
+    public static MsgResultMap subscribeSend(String assessToken, String openId, String templateId, Map<String, Object> data, String page) throws Exception {
+=====================================================================
+Found a 21 line (109 tokens) duplication in the following files: 
+Starting at line 550 of C:\Users\A681549\Desktop\bsh_hcwxapp_api\src\main\java\com\zencloud\bsh\service\impl\HomeappliancesServiceImpl.java
+Starting at line 1006 of C:\Users\A681549\Desktop\bsh_hcwxapp_api\src\main\java\com\zencloud\bsh\service\impl\HomeappliancesServiceImpl.java
+
+                saveErrorLogByException(e, logInfo);
+                return new ResultMap(NET_ERROR);
+            }
+            if (null == jsonObject) {
+                saveEndLog(logInfo, null);
+                return new ResultMap();
+            }
+            JSONObject error = jsonObject.getJSONObject("error");
+            int code = jsonObject.getInt("resCode");
+            if (null != error && error.size() > 0) {
+                return returnResultMap(error, code, logInfo);
+            }
+
+            saveEndLog(logInfo, null);
+            return new ResultMap();
+        } catch (Exception e) {
+            e.printStackTrace();
+            saveErrorLogByException(e, logInfo);
+            return new ResultMap(SYSTEM_ERROR);
+        }
+    }
+=====================================================================
+Found a 11 line (109 tokens) duplication in the following files: 
+Starting at line 634 of C:\Users\A681549\Desktop\bsh_hcwxapp_api\src\main\java\com\zencloud\bsh\service\impl\WxuserSignInServiceImpl.java
+Starting at line 677 of C:\Users\A681549\Desktop\bsh_hcwxapp_api\src\main\java\com\zencloud\bsh\service\impl\WxuserSignInServiceImpl.java
+
+                                if (!ObjectUtils.isEmpty(mapping)) {//�?要做任务
+                                    if (ObjectUtils.isEmpty(wxuserTaskHistory)) {
+                                        wxuserTaskHistory = new WxuserTaskHistory(wxuserTokenMapping.getLoginid(), wxuserTask.getTaskType(), 1, 0, DateTimeUtil.getCurDateTime(), wxuserTask.getId());
+                                    }
+                                    if (wxuserTaskHistory.getStatus() == 1) {
+                                        wxuserTaskHistory.setStatus(0);
+                                        wxuserTaskHistory.insertOrUpdate();
+                                        taskVo.set(new TaskVo(wxuserTaskHistory.getId(), wxuserTask.getTitle(), wxuserTask.getScore(), wxuserTask.getTaskType(), wxuserTaskHistory.getStatus()));
+                                    }
+                                }
+                            } else {//无需家电
+=====================================================================
+Found a 13 line (108 tokens) duplication in the following files: 
+Starting at line 96 of C:\Users\A681549\Desktop\bsh_hcwxapp_api\src\main\java\com\zencloud\bsh\service\impl\RecipesServiceImpl.java
+Starting at line 594 of C:\Users\A681549\Desktop\bsh_hcwxapp_api\src\main\java\com\zencloud\bsh\service\impl\RecipesServiceImpl.java
+
+    public ResultMap recipesList(RecipesListDto recipesListDto, String accessToken, HttpServletRequest request) {
+        String methodName = SERVICE_NAME + Thread.currentThread().getStackTrace()[1].getMethodName();
+        LogInfo logInfo = LogInfoUtil.createLogInfo(request, accessToken, recipesListDto, methodName);
+        try {
+            Integer page = null != recipesListDto ? recipesListDto.getPage() : null;
+            if (null == page) {
+                page = 1;
+            }
+            Integer pageSize = null != recipesListDto ? recipesListDto.getPageSize() : null;
+            if (null == pageSize) {
+                pageSize = 20;
+            }
+            page = (page - 1) * pageSize;
+=====================================================================
+Found a 11 line (108 tokens) duplication in the following files: 
+Starting at line 644 of C:\Users\A681549\Desktop\bsh_hcwxapp_api\src\main\java\com\zencloud\bsh\service\impl\WxuserSignInServiceImpl.java
+Starting at line 677 of C:\Users\A681549\Desktop\bsh_hcwxapp_api\src\main\java\com\zencloud\bsh\service\impl\WxuserSignInServiceImpl.java
+
+                            } else {//无需家电
+                                if (ObjectUtils.isEmpty(wxuserTaskHistory)) {
+                                    wxuserTaskHistory = new WxuserTaskHistory(wxuserTokenMapping.getLoginid(), wxuserTask.getTaskType(), 1, 0, DateTimeUtil.getCurDateTime(), wxuserTask.getId());
+                                }
+                                if (wxuserTaskHistory.getStatus() == 1) {
+                                    wxuserTaskHistory.setStatus(0);
+                                    wxuserTaskHistory.insertOrUpdate();
+                                    taskVo.set(new TaskVo(wxuserTaskHistory.getId(), wxuserTask.getTitle(), wxuserTask.getScore(), wxuserTask.getTaskType(), wxuserTaskHistory.getStatus()));
+                                }
+                            }
+                        } else { //家电周期任务
+=====================================================================
+Found a 16 line (107 tokens) duplication in the following files: 
+Starting at line 153 of C:\Users\A681549\Desktop\bsh_hcwxapp_api\src\main\java\com\zencloud\bsh\util\WxUtil.java
+Starting at line 177 of C:\Users\A681549\Desktop\bsh_hcwxapp_api\src\main\java\com\zencloud\bsh\util\WxUtil.java
+
+        logger.info("*****************  获取微信openid ******************");
+        logger.info("url�?" + url);
+
+        HttpClientBuilder httpClientBuilder = HttpClientBuilder.create();
+        CloseableHttpClient client = httpClientBuilder.build();
+        HttpGet httpGet = getHttpGet(url);
+        CloseableHttpResponse response = client.execute(httpGet);
+        JSONObject object = getEntityToJson(response);
+        logger.info("response:" + object.toString());
+        if (null != object.get("errcode")) {
+            int errcode = object.getInt("errcode");
+            if (errcode != 0) {
+                String errmsg = object.getString("errmsg");
+                return new ResultMap(errcode, errmsg);
+            }
+        }
+=====================================================================
+Found a 15 line (97 tokens) duplication in the following files: 
+Starting at line 510 of C:\Users\A681549\Desktop\bsh_hcwxapp_api\src\main\java\com\zencloud\bsh\service\impl\HomeappliancesServiceImpl.java
+Starting at line 580 of C:\Users\A681549\Desktop\bsh_hcwxapp_api\src\main\java\com\zencloud\bsh\service\impl\HomeappliancesServiceImpl.java
+Starting at line 613 of C:\Users\A681549\Desktop\bsh_hcwxapp_api\src\main\java\com\zencloud\bsh\service\impl\HomeappliancesServiceImpl.java
+Starting at line 647 of C:\Users\A681549\Desktop\bsh_hcwxapp_api\src\main\java\com\zencloud\bsh\service\impl\HomeappliancesServiceImpl.java
+Starting at line 680 of C:\Users\A681549\Desktop\bsh_hcwxapp_api\src\main\java\com\zencloud\bsh\service\impl\HomeappliancesServiceImpl.java
+Starting at line 744 of C:\Users\A681549\Desktop\bsh_hcwxapp_api\src\main\java\com\zencloud\bsh\service\impl\HomeappliancesServiceImpl.java
+Starting at line 800 of C:\Users\A681549\Desktop\bsh_hcwxapp_api\src\main\java\com\zencloud\bsh\service\impl\HomeappliancesServiceImpl.java
+Starting at line 833 of C:\Users\A681549\Desktop\bsh_hcwxapp_api\src\main\java\com\zencloud\bsh\service\impl\HomeappliancesServiceImpl.java
+Starting at line 922 of C:\Users\A681549\Desktop\bsh_hcwxapp_api\src\main\java\com\zencloud\bsh\service\impl\HomeappliancesServiceImpl.java
+
+                jsonObject = hcService.get(HA_URL + "/api/homeappliances/" + url, getHaAccessToken(accessToken), haid, request);
+            } catch (Exception e) {
+                saveErrorLogByErrType(NET_ERROR, logInfo);
+                return new ResultMap(NET_ERROR);
+            }
+            JSONObject error = jsonObject.getJSONObject("error");
+            int code = jsonObject.getInt("resCode");
+            if (null != error && error.size() > 0) {
+                return returnResultMap(error, code, logInfo);
+            }
+            JSONObject data = jsonObject.getJSONObject("data");
+            if (null == data) {
+                saveErrorLogByErrType(GET_HOMEAPPLIANCES_ERROR, logInfo);
+                return new ResultMap(GET_HOMEAPPLIANCES_ERROR);
+            }
+=====================================================================
+Found a 7 line (97 tokens) duplication in the following files: 
+Starting at line 896 of C:\Users\A681549\Desktop\bsh_hcwxapp_api\src\main\java\com\zencloud\bsh\service\impl\WxAccountServiceImpl.java
+Starting at line 921 of C:\Users\A681549\Desktop\bsh_hcwxapp_api\src\main\java\com\zencloud\bsh\service\impl\WxAccountServiceImpl.java
+
+    public ResultMap userAdditon(AdditionDto additionDto, String accessToken, HttpServletRequest request) {
+        String methodName = SERVICE_NAME + Thread.currentThread().getStackTrace()[1].getMethodName();
+        LogInfo logInfo = LogInfoUtil.createLogInfo(request, accessToken, null, methodName);
+        try {
+            WxuserTokenMapping wxuserTokenMapping = wxuserTokenMappingMapper.selectOne(new QueryWrapper<WxuserTokenMapping>().eq("access_token", accessToken));
+            String loginid = wxuserTokenMapping.getLoginid();
+            WxuserAddition addition = wxuserAdditionMapper.selectOne(new QueryWrapper<WxuserAddition>().eq("loginid", loginid));
+=====================================================================
+Found a 15 line (95 tokens) duplication in the following files: 
+Starting at line 400 of C:\Users\A681549\Desktop\bsh_hcwxapp_api\src\main\java\com\zencloud\bsh\service\impl\HomeappliancesServiceImpl.java
+Starting at line 510 of C:\Users\A681549\Desktop\bsh_hcwxapp_api\src\main\java\com\zencloud\bsh\service\impl\HomeappliancesServiceImpl.java
+Starting at line 580 of C:\Users\A681549\Desktop\bsh_hcwxapp_api\src\main\java\com\zencloud\bsh\service\impl\HomeappliancesServiceImpl.java
+Starting at line 613 of C:\Users\A681549\Desktop\bsh_hcwxapp_api\src\main\java\com\zencloud\bsh\service\impl\HomeappliancesServiceImpl.java
+Starting at line 647 of C:\Users\A681549\Desktop\bsh_hcwxapp_api\src\main\java\com\zencloud\bsh\service\impl\HomeappliancesServiceImpl.java
+Starting at line 680 of C:\Users\A681549\Desktop\bsh_hcwxapp_api\src\main\java\com\zencloud\bsh\service\impl\HomeappliancesServiceImpl.java
+Starting at line 744 of C:\Users\A681549\Desktop\bsh_hcwxapp_api\src\main\java\com\zencloud\bsh\service\impl\HomeappliancesServiceImpl.java
+Starting at line 800 of C:\Users\A681549\Desktop\bsh_hcwxapp_api\src\main\java\com\zencloud\bsh\service\impl\HomeappliancesServiceImpl.java
+Starting at line 833 of C:\Users\A681549\Desktop\bsh_hcwxapp_api\src\main\java\com\zencloud\bsh\service\impl\HomeappliancesServiceImpl.java
+Starting at line 922 of C:\Users\A681549\Desktop\bsh_hcwxapp_api\src\main\java\com\zencloud\bsh\service\impl\HomeappliancesServiceImpl.java
+Starting at line 1148 of C:\Users\A681549\Desktop\bsh_hcwxapp_api\src\main\java\com\zencloud\bsh\service\impl\HomeappliancesServiceImpl.java
+
+                jsonObject = hcService.findHaidHomeappliance(getHaAccessToken(accessToken), haId, request);
+            } catch (Exception e) {
+                saveErrorLogByErrType(NET_ERROR, logInfo);
+                return new ResultMap(NET_ERROR);
+            }
+            JSONObject error = jsonObject.getJSONObject("error");
+            int code = jsonObject.getInt("resCode");
+            if (null != error && error.size() > 0) {
+                return returnResultMap(error, code, logInfo);
+            }
+            JSONObject data = jsonObject.getJSONObject("data");
+            if (null == data) {
+                saveErrorLogByErrType(GET_HOMEAPPLIANCES_ERROR, logInfo);
+                return new ResultMap(GET_HOMEAPPLIANCES_ERROR);
+            }
+=====================================================================
+Found a 10 line (94 tokens) duplication in the following files: 
+Starting at line 260 of C:\Users\A681549\Desktop\bsh_hcwxapp_api\src\main\java\com\zencloud\bsh\service\impl\RecipesServiceImpl.java
+Starting at line 607 of C:\Users\A681549\Desktop\bsh_hcwxapp_api\src\main\java\com\zencloud\bsh\service\impl\RecipesServiceImpl.java
+
+                WxuserTokenMapping wxuserTokenMapping = wxuserTokenMappingMapper.selectOne(new QueryWrapper<WxuserTokenMapping>().eq("access_token", accessToken));
+                if (ObjectUtils.isEmpty(wxuserTokenMapping)) {
+                    saveErrorLogByErrType(ACCESSTOKEN_ERROR, logInfo);
+                    return new ResultMap(ACCESSTOKEN_ERROR);
+                }
+                WxUser wxUser = wxUserMapper.selectOne(new QueryWrapper<WxUser>().eq("loginid",wxuserTokenMapping.getLoginid()));
+                if (ObjectUtils.isEmpty(wxUser)) {
+                    saveErrorLogByErrType(ACCESSTOKEN_ERROR, logInfo);
+                    return new ResultMap(ACCESSTOKEN_ERROR);
+                }
+=====================================================================
+Found a 6 line (94 tokens) duplication in the following files: 
+Starting at line 616 of C:\Users\A681549\Desktop\bsh_hcwxapp_api\src\main\java\com\zencloud\bsh\service\impl\ShareServiceImpl.java
+Starting at line 941 of C:\Users\A681549\Desktop\bsh_hcwxapp_api\src\main\java\com\zencloud\bsh\service\impl\WxAccountServiceImpl.java
+
+    public ResultMap findShareHistory(String accessToken, HttpServletRequest request) {
+        String methodName = SERVICE_NAME + Thread.currentThread().getStackTrace()[1].getMethodName();
+        LogInfo logInfo = LogInfoUtil.createLogInfo(request, accessToken, null, methodName);
+        try {
+            WxuserTokenMapping wxuserTokenMapping = wxuserTokenMappingMapper.selectOne(new QueryWrapper<WxuserTokenMapping>().eq("access_token", accessToken));
+            WxUser wxUser = wxUserMapper.selectOne(new QueryWrapper<WxUser>().eq("loginid",wxuserTokenMapping.getLoginid()));
+=====================================================================
+Found a 9 line (93 tokens) duplication in the following files: 
+Starting at line 42 of C:\Users\A681549\Desktop\bsh_hcwxapp_api\src\main\java\com\zencloud\bsh\service\impl\ArticleServiceImpl.java
+Starting at line 210 of C:\Users\A681549\Desktop\bsh_hcwxapp_api\src\main\java\com\zencloud\bsh\service\impl\ArticleServiceImpl.java
+
+    public ResultMap articleList(ArticlesDto articlesDto, String accessToken, HttpServletRequest request) {
+        String methodName = SERVICE_NAME + Thread.currentThread().getStackTrace()[1].getMethodName();
+        LogInfo logInfo = LogInfoUtil.createLogInfo(request, accessToken, articlesDto, methodName);
+        try {
+            int page = articlesDto.getPage();
+            int pageSize = articlesDto.getPageSize();
+            page = (page - 1) * pageSize;
+            String sortStr = getSoryStr(articlesDto.getSortBy());
+            List<ArticlesVo> articles = articleMapper.articleList(page, pageSize, articlesDto.getBannerId(), sortStr);
+=====================================================================
+Found a 10 line (92 tokens) duplication in the following files: 
+Starting at line 387 of C:\Users\A681549\Desktop\bsh_hcwxapp_api\src\main\java\com\zencloud\bsh\service\impl\WxAccountServiceImpl.java
+Starting at line 585 of C:\Users\A681549\Desktop\bsh_hcwxapp_api\src\main\java\com\zencloud\bsh\service\impl\WxAccountServiceImpl.java
+
+            JSONObject error = jsonObject.getJSONObject("error");
+            if (null != error && error.size() > 0) {
+                String errorCode = error.getString("errorCode");
+                if (!StringUtil.isEmpty(errorCode) && ("606".equals(errorCode) || errorCode.equals("607") || errorCode.equals("608") || errorCode.equals("609"))) {
+                    return acceptTosDpt(authToken, request);
+                } else {
+                    return returnResultMap(error, logInfo);
+                }
+            }
+            JSONObject data = jsonObject.getJSONObject("data");
+=====================================================================
+Found a 13 line (89 tokens) duplication in the following files: 
+Starting at line 98 of C:\Users\A681549\Desktop\bsh_hcwxapp_api\src\main\java\com\zencloud\bsh\service\impl\HomeappliancesServiceImpl.java
+Starting at line 1147 of C:\Users\A681549\Desktop\bsh_hcwxapp_api\src\main\java\com\zencloud\bsh\service\impl\HomeappliancesServiceImpl.java
+
+            try {
+                jsonObject = hcService.findHomeappliances(getHaAccessToken(accessToken), request);
+            } catch (Exception e) {
+                saveErrorLogByErrType(NET_ERROR, logInfo);
+                return new ResultMap(NET_ERROR);
+            }
+            JSONObject error = jsonObject.getJSONObject("error");
+            int code = jsonObject.getInt("resCode");
+            if (null != error && error.size() > 0) {
+                return returnResultMap(error, code, logInfo);
+            }
+            JSONObject data = jsonObject.getJSONObject("data");
+            if (ObjectUtils.isEmpty(data)) {
+=====================================================================
+Found a 14 line (89 tokens) duplication in the following files: 
+Starting at line 1392 of C:\Users\A681549\Desktop\bsh_hcwxapp_api\src\main\java\com\zencloud\bsh\service\impl\HomeappliancesServiceImpl.java
+Starting at line 1666 of C:\Users\A681549\Desktop\bsh_hcwxapp_api\src\main\java\com\zencloud\bsh\service\impl\HomeappliancesServiceImpl.java
+
+            JSONArray optionsArr = programOption.getJSONArray("options");
+            for (int arr = 0; arr < optionsArr.size(); arr++) {
+                JSONObject jsonObject = optionsArr.getJSONObject(arr);
+                //在每�? options 数组里将 key 对应的描述查出来，作为这个元素里的一�? description �?
+                String key = jsonObject.getString("key");
+                Object o = textMap.get("fmf.description." + key.toLowerCase());
+                if(null != o){
+                    jsonObject.put("description",o.toString());
+                }
+            }
+            options = optionsArr.toString();
+        }catch (Exception e){
+            // options �? map
+            JSONObject optionJson = programOption.getJSONObject("options");
+=====================================================================
+Found a 9 line (87 tokens) duplication in the following files: 
+Starting at line 42 of C:\Users\A681549\Desktop\bsh_hcwxapp_api\src\main\java\com\zencloud\bsh\service\impl\ArticleServiceImpl.java
+Starting at line 187 of C:\Users\A681549\Desktop\bsh_hcwxapp_api\src\main\java\com\zencloud\bsh\service\impl\ArticleServiceImpl.java
+Starting at line 210 of C:\Users\A681549\Desktop\bsh_hcwxapp_api\src\main\java\com\zencloud\bsh\service\impl\ArticleServiceImpl.java
+
+    public ResultMap articleList(ArticlesDto articlesDto, String accessToken, HttpServletRequest request) {
+        String methodName = SERVICE_NAME + Thread.currentThread().getStackTrace()[1].getMethodName();
+        LogInfo logInfo = LogInfoUtil.createLogInfo(request, accessToken, articlesDto, methodName);
+        try {
+            int page = articlesDto.getPage();
+            int pageSize = articlesDto.getPageSize();
+            page = (page - 1) * pageSize;
+            String sortStr = getSoryStr(articlesDto.getSortBy());
+            List<ArticlesVo> articles = articleMapper.articleList(page, pageSize, articlesDto.getBannerId(), sortStr);
+=====================================================================
+Found a 24 line (87 tokens) duplication in the following files: 
+Starting at line 46 of C:\Users\A681549\Desktop\bsh_hcwxapp_api\src\main\java\com\zencloud\bsh\util\AWSUtil.java
+Starting at line 74 of C:\Users\A681549\Desktop\bsh_hcwxapp_api\src\main\java\com\zencloud\bsh\util\AWSUtils.java
+
+            url = s3.generatePresignedUrl(urlRequest);
+        } catch (AmazonServiceException ase) {
+            ase.printStackTrace();
+        } catch (AmazonClientException ace) {
+            ace.printStackTrace();
+        }
+        return url.toString();
+    }
+
+    /**
+     * 验证s3上是否存在名称为bucketName的Bucket
+     * @param s3
+     * @param bucketName
+     * @return
+     */
+    public static boolean checkBucketExists (AmazonS3 s3, String bucketName) {
+        List<Bucket> buckets = s3.listBuckets();
+        for (Bucket bucket : buckets) {
+            if (Objects.equals(bucket.getName(), bucketName)) {
+                return true;
+            }
+        }
+        return false;
+    }
+=====================================================================
+Found a 13 line (84 tokens) duplication in the following files: 
+Starting at line 547 of C:\Users\A681549\Desktop\bsh_hcwxapp_api\src\main\java\com\zencloud\bsh\service\impl\HomeappliancesServiceImpl.java
+Starting at line 1467 of C:\Users\A681549\Desktop\bsh_hcwxapp_api\src\main\java\com\zencloud\bsh\service\impl\HomeappliancesServiceImpl.java
+
+            try {
+                jsonObject = hcService.put(HA_URL + "/api/homeappliances/" + url, getHaAccessToken(accessToken), paramMap, haid, request);
+            } catch (Exception e) {
+                saveErrorLogByException(e, logInfo);
+                return new ResultMap(NET_ERROR);
+            }
+            if (null == jsonObject) {
+                saveEndLog(logInfo, null);
+                return new ResultMap();
+            }
+            JSONObject error = jsonObject.getJSONObject("error");
+            int code = jsonObject.getInt("resCode");
+            if (null != error && error.size() > 0) {
+=====================================================================
+Found a 6 line (84 tokens) duplication in the following files: 
+Starting at line 387 of C:\Users\A681549\Desktop\bsh_hcwxapp_api\src\main\java\com\zencloud\bsh\service\impl\WxAccountServiceImpl.java
+Starting at line 670 of C:\Users\A681549\Desktop\bsh_hcwxapp_api\src\main\java\com\zencloud\bsh\service\impl\WxAccountServiceImpl.java
+
+            JSONObject error = jsonObject.getJSONObject("error");
+            if (null != error && error.size() > 0) {
+                String errorCode = error.getString("errorCode");
+                if (!StringUtil.isEmpty(errorCode) && ("606".equals(errorCode) || errorCode.equals("607") || errorCode.equals("608") || errorCode.equals("609"))) {
+                    return acceptTosDpt(authToken, request);
+                } else {
+=====================================================================
+Found a 9 line (82 tokens) duplication in the following files: 
+Starting at line 1180 of C:\Users\A681549\Desktop\bsh_hcwxapp_api\src\main\java\com\zencloud\bsh\service\impl\HomeappliancesServiceImpl.java
+Starting at line 1255 of C:\Users\A681549\Desktop\bsh_hcwxapp_api\src\main\java\com\zencloud\bsh\service\impl\HomeappliancesServiceImpl.java
+
+    public ResultMap findHaidProgramScope(String accessToken, String haid, HttpServletRequest request) {
+        String methodName = SERVICE_NAME + Thread.currentThread().getStackTrace()[1].getMethodName();
+        LogInfo logInfo = LogInfoUtil.createLogInfo(request, accessToken, null, haid, methodName);
+        setCategoryByLog(logInfo);
+        try {
+            String vib = null;
+            if (!StringUtil.isEmpty(haid)) {
+                vib = haid.split("-")[1];
+            }
+=====================================================================
+Found a 9 line (81 tokens) duplication in the following files: 
+Starting at line 577 of C:\Users\A681549\Desktop\bsh_hcwxapp_api\src\main\java\com\zencloud\bsh\service\impl\ShareServiceImpl.java
+Starting at line 693 of C:\Users\A681549\Desktop\bsh_hcwxapp_api\src\main\java\com\zencloud\bsh\service\impl\WxAccountServiceImpl.java
+
+                    WxuserHaidMapping wxuserHaidMapping = wxuserHaidMappingMapper.selectOne(new QueryWrapper<WxuserHaidMapping>().eq("loginid", loginid).eq("haid", haid));
+                    if(!StringUtils.isEmpty(wxuserHaidMapping)){
+                        List<WxuserFavoriteProgram> wxuserFavoritePrograms = wxuserFavoriteProgramMapper.selectList(new QueryWrapper<WxuserFavoriteProgram>().eq("wx_user_haid_id", wxuserHaidMapping.getId()));
+                        if (!CollectionUtils.isEmpty(wxuserFavoritePrograms)) {
+                            for (WxuserFavoriteProgram wxuserFavoriteProgram : wxuserFavoritePrograms) {
+                                wxuserFavoriteProgramMapper.deleteById(wxuserFavoriteProgram.getId());
+                            }
+                        }
+                    }
+=====================================================================
+Found a 18 line (81 tokens) duplication in the following files: 
+Starting at line 41 of C:\Users\A681549\Desktop\bsh_hcwxapp_api\src\main\java\com\zencloud\bsh\util\HttpUtil.java
+Starting at line 90 of C:\Users\A681549\Desktop\bsh_hcwxapp_api\src\main\java\com\zencloud\bsh\util\HttpUtil.java
+
+            httpResponse = httpClient.execute(httpGet);
+            httpRspObject = handleResponse(httpResponse);
+        } catch (IOException e) {
+            logger.warn(e.getMessage(), e);
+        } finally {
+            try {
+                if (httpResponse != null) {
+                    httpResponse.close();
+                }
+                if (httpClient != null) {
+                    httpClient.close();
+                }
+            } catch (IOException e) {
+                logger.warn(e.getMessage(), e);
+            }
+        }
+        return httpRspObject;
+    }
+=====================================================================
+Found a 10 line (80 tokens) duplication in the following files: 
+Starting at line 536 of C:\Users\A681549\Desktop\bsh_hcwxapp_api\src\main\java\com\zencloud\bsh\service\impl\HomeappliancesServiceImpl.java
+Starting at line 1417 of C:\Users\A681549\Desktop\bsh_hcwxapp_api\src\main\java\com\zencloud\bsh\service\impl\HomeappliancesServiceImpl.java
+
+    public ResultMap updatePrograms(String url, String accessToken, Map<String, Object> paramMap, HttpServletRequest request) {
+        String methodName = SERVICE_NAME + Thread.currentThread().getStackTrace()[1].getMethodName();
+        String haid = null;
+        if (!StringUtil.isEmpty(url)) {
+            haid = url.split("/")[0];
+        }
+        LogInfo logInfo = LogInfoUtil.createLogInfo(request, accessToken, paramMap, haid, methodName);
+        setCategoryByLog(logInfo);
+        try {
+            JSONObject jsonObject = null;
+=====================================================================
+Found a 7 line (80 tokens) duplication in the following files: 
+Starting at line 585 of C:\Users\A681549\Desktop\bsh_hcwxapp_api\src\main\java\com\zencloud\bsh\service\impl\WxAccountServiceImpl.java
+Starting at line 670 of C:\Users\A681549\Desktop\bsh_hcwxapp_api\src\main\java\com\zencloud\bsh\service\impl\WxAccountServiceImpl.java
+
+                JSONObject error = object.getJSONObject("error");
+                if (null != error && error.size() > 0) {
+                    String errorCode = error.getString("errorCode");
+                    //添加 606 错误码接�?
+                    if (!StringUtil.isEmpty(errorCode) && ("606".equals(errorCode) || errorCode.equals("607") || errorCode.equals("608") || errorCode.equals("609"))) {
+                       return acceptTosDpt(authToken, request);
+                    } else {
+=====================================================================
+Found a 10 line (80 tokens) duplication in the following files: 
+Starting at line 49 of C:\Users\A681549\Desktop\bsh_hcwxapp_api\src\main\java\com\zencloud\bsh\util\WxUtil.java
+Starting at line 154 of C:\Users\A681549\Desktop\bsh_hcwxapp_api\src\main\java\com\zencloud\bsh\util\WxUtil.java
+Starting at line 178 of C:\Users\A681549\Desktop\bsh_hcwxapp_api\src\main\java\com\zencloud\bsh\util\WxUtil.java
+
+        logger.info("********************  请求微信accesstoken ****************");
+        HttpClientBuilder httpClientBuilder = HttpClientBuilder.create();
+        CloseableHttpClient client = httpClientBuilder.build();
+        HttpGet httpGet = getHttpGet(url);
+        CloseableHttpResponse response = client.execute(httpGet);
+        JSONObject object = getEntityToJson(response);
+        logger.info("response:" + object.toString());
+        if(null != object.get("errcode")){
+            int errcode = object.getInt("errcode");
+            if (errcode != 0) {
+=====================================================================
+Found a 15 line (79 tokens) duplication in the following files: 
+Starting at line 50 of C:\Users\A681549\Desktop\bsh_hcwxapp_api\src\main\java\com\zencloud\bsh\service\impl\ArticleServiceImpl.java
+Starting at line 195 of C:\Users\A681549\Desktop\bsh_hcwxapp_api\src\main\java\com\zencloud\bsh\service\impl\ArticleServiceImpl.java
+
+            List<ArticlesVo> articles = articleMapper.articleList(page, pageSize, articlesDto.getBannerId(), sortStr);
+            if (CollectionUtils.isEmpty(articles)) {
+                saveEndLog(logInfo, null);
+                return new ResultMap(SUCCESS, null);
+            }
+            saveEndLog(logInfo, articles);
+            return new ResultMap(SUCCESS, articles);
+        } catch (Exception e) {
+            e.printStackTrace();
+            saveErrorLogByException(e, logInfo);
+            return new ResultMap(DATEBASE_ERROR);
+        }
+    }
+
+    @Override
+=====================================================================
+Found a 9 line (78 tokens) duplication in the following files: 
+Starting at line 66 of C:\Users\A681549\Desktop\bsh_hcwxapp_api\src\main\java\com\zencloud\bsh\service\impl\ArticleServiceImpl.java
+Starting at line 112 of C:\Users\A681549\Desktop\bsh_hcwxapp_api\src\main\java\com\zencloud\bsh\service\impl\ArticleServiceImpl.java
+Starting at line 150 of C:\Users\A681549\Desktop\bsh_hcwxapp_api\src\main\java\com\zencloud\bsh\service\impl\ArticleServiceImpl.java
+
+    public ResultMap articleDetail(int articleid, String accessToken, HttpServletRequest request) {
+        String methodName = SERVICE_NAME + Thread.currentThread().getStackTrace()[1].getMethodName();
+        LogInfo logInfo = LogInfoUtil.createLogInfo(request, accessToken, articleid, methodName);
+        try {
+            Article article = articleMapper.selectById(articleid);
+            if (null == article) {
+                saveErrorLogByErrType(GET_ARTICLE_ERROR, logInfo);
+                return new ResultMap(GET_ARTICLE_ERROR);
+            }
+=====================================================================
+Found a 7 line (77 tokens) duplication in the following files: 
+Starting at line 47 of C:\Users\A681549\Desktop\bsh_hcwxapp_api\src\main\java\com\zencloud\bsh\config\redisConfig.java
+Starting at line 58 of C:\Users\A681549\Desktop\bsh_hcwxapp_api\src\main\java\com\zencloud\bsh\config\redisConfig.java
+
+    public RedisTemplate<String, Object> redisTemplate(
+            @Value("${spring.redis.host}") String host,
+            @Value("${spring.redis.port}") int port, @Value("${spring.redis.password}") String password,
+            @Value("${spring.redis.database}") int db, @Value("${spring.redis.timeout}") long timeout, JedisPoolConfig poolConfig) {
+        RedisStandaloneConfiguration redisStandaloneConfiguration = redisStandaloneConfiguration(host, port, password, db);
+        JedisClientConfiguration jedisClientConfiguration = jedisClientConfiguration(poolConfig, timeout);
+        JedisConnectionFactory jedisConnectionFactory = new JedisConnectionFactory(redisStandaloneConfiguration, jedisClientConfiguration);
+=====================================================================
+Found a 12 line (77 tokens) duplication in the following files: 
+Starting at line 99 of C:\Users\A681549\Desktop\bsh_hcwxapp_api\src\main\java\com\zencloud\bsh\service\impl\HomeappliancesServiceImpl.java
+Starting at line 266 of C:\Users\A681549\Desktop\bsh_hcwxapp_api\src\main\java\com\zencloud\bsh\service\impl\HomeappliancesServiceImpl.java
+Starting at line 400 of C:\Users\A681549\Desktop\bsh_hcwxapp_api\src\main\java\com\zencloud\bsh\service\impl\HomeappliancesServiceImpl.java
+Starting at line 510 of C:\Users\A681549\Desktop\bsh_hcwxapp_api\src\main\java\com\zencloud\bsh\service\impl\HomeappliancesServiceImpl.java
+Starting at line 580 of C:\Users\A681549\Desktop\bsh_hcwxapp_api\src\main\java\com\zencloud\bsh\service\impl\HomeappliancesServiceImpl.java
+Starting at line 613 of C:\Users\A681549\Desktop\bsh_hcwxapp_api\src\main\java\com\zencloud\bsh\service\impl\HomeappliancesServiceImpl.java
+Starting at line 647 of C:\Users\A681549\Desktop\bsh_hcwxapp_api\src\main\java\com\zencloud\bsh\service\impl\HomeappliancesServiceImpl.java
+Starting at line 680 of C:\Users\A681549\Desktop\bsh_hcwxapp_api\src\main\java\com\zencloud\bsh\service\impl\HomeappliancesServiceImpl.java
+Starting at line 744 of C:\Users\A681549\Desktop\bsh_hcwxapp_api\src\main\java\com\zencloud\bsh\service\impl\HomeappliancesServiceImpl.java
+Starting at line 800 of C:\Users\A681549\Desktop\bsh_hcwxapp_api\src\main\java\com\zencloud\bsh\service\impl\HomeappliancesServiceImpl.java
+Starting at line 833 of C:\Users\A681549\Desktop\bsh_hcwxapp_api\src\main\java\com\zencloud\bsh\service\impl\HomeappliancesServiceImpl.java
+Starting at line 922 of C:\Users\A681549\Desktop\bsh_hcwxapp_api\src\main\java\com\zencloud\bsh\service\impl\HomeappliancesServiceImpl.java
+
+                jsonObject = hcService.findHomeappliances(getHaAccessToken(accessToken), request);
+            } catch (Exception e) {
+                saveErrorLogByErrType(NET_ERROR, logInfo);
+                return new ResultMap(NET_ERROR);
+            }
+            JSONObject error = jsonObject.getJSONObject("error");
+            int code = jsonObject.getInt("resCode");
+            if (null != error && error.size() > 0) {
+                return returnResultMap(error, code, logInfo);
+            }
+            JSONObject data = jsonObject.getJSONObject("data");
+            if (ObjectUtils.isEmpty(data)) {
+=====================================================================
+Found a 8 line (76 tokens) duplication in the following files: 
+Starting at line 606 of C:\Users\A681549\Desktop\bsh_hcwxapp_api\src\main\java\com\zencloud\bsh\service\impl\HomeappliancesServiceImpl.java
+Starting at line 673 of C:\Users\A681549\Desktop\bsh_hcwxapp_api\src\main\java\com\zencloud\bsh\service\impl\HomeappliancesServiceImpl.java
+Starting at line 826 of C:\Users\A681549\Desktop\bsh_hcwxapp_api\src\main\java\com\zencloud\bsh\service\impl\HomeappliancesServiceImpl.java
+
+    public ResultMap findStatusByKey(String accessToken, String haid, String key, HttpServletRequest request) {
+        String methodName = SERVICE_NAME + Thread.currentThread().getStackTrace()[1].getMethodName();
+        LogInfo logInfo = LogInfoUtil.createLogInfo(request, accessToken, null, haid, methodName);
+        setCategoryByLog(logInfo);
+        try {
+            JSONObject jsonObject = null;
+            try {
+                jsonObject = hcService.get(HA_URL + "/api/homeappliances/" + haid + "/status/" + key, getHaAccessToken(accessToken), haid, request);
+=====================================================================
+Found a 9 line (76 tokens) duplication in the following files: 
+Starting at line 1255 of C:\Users\A681549\Desktop\bsh_hcwxapp_api\src\main\java\com\zencloud\bsh\service\impl\HomeappliancesServiceImpl.java
+Starting at line 1612 of C:\Users\A681549\Desktop\bsh_hcwxapp_api\src\main\java\com\zencloud\bsh\service\impl\HomeappliancesServiceImpl.java
+
+    public ResultMap findHaidProgramScopeByDDF(String accessToken, String haid, HttpServletRequest request) {
+        String methodName = SERVICE_NAME + Thread.currentThread().getStackTrace()[1].getMethodName();
+        LogInfo logInfo = LogInfoUtil.createLogInfo(request, accessToken, null, haid, methodName);
+        setCategoryByLog(logInfo);
+        try {
+            String vib = null;
+            if (!StringUtil.isEmpty(haid)) {
+                vib = haid.split("-")[1];
+            }
+=====================================================================
+Found a 6 line (76 tokens) duplication in the following files: 
+Starting at line 921 of C:\Users\A681549\Desktop\bsh_hcwxapp_api\src\main\java\com\zencloud\bsh\service\impl\WxAccountServiceImpl.java
+Starting at line 418 of C:\Users\A681549\Desktop\bsh_hcwxapp_api\src\main\java\com\zencloud\bsh\service\impl\WxuserSignInServiceImpl.java
+
+    public ResultMap getAddition(String accessToken, HttpServletRequest request) {
+        String methodName = SERVICE_NAME + Thread.currentThread().getStackTrace()[1].getMethodName();
+        LogInfo logInfo = LogInfoUtil.createLogInfo(request, accessToken, null, methodName);
+        try {
+            WxuserTokenMapping wxuserTokenMapping = wxuserTokenMappingMapper.selectOne(new QueryWrapper<WxuserTokenMapping>().eq("access_token", accessToken));
+            String loginid = wxuserTokenMapping.getLoginid();
+=====================================================================
+Found a 13 line (76 tokens) duplication in the following files: 
+Starting at line 258 of C:\Users\A681549\Desktop\bsh_hcwxapp_api\src\main\java\com\zencloud\bsh\service\impl\WxuserSignInServiceImpl.java
+Starting at line 834 of C:\Users\A681549\Desktop\bsh_hcwxapp_api\src\main\java\com\zencloud\bsh\service\impl\WxuserSignInServiceImpl.java
+
+            wxuserSignInVo.setLevel(wxuserLevel.getLevel());
+            Integer startScore = wxuserLevel.getStartScore();
+            Integer endScore = wxuserLevel.getEndScore();
+            if (startScore == 0) {
+                wxuserSignInVo.setStartScore(0);
+            } else {
+                wxuserSignInVo.setStartScore(wxuserLevel.getStartScore() - 1);
+            }
+            if (endScore == 1000000) { //�?后等级分数，显示爆表
+                wxuserSignInVo.setEndScore(- 1);
+            } else {
+                wxuserSignInVo.setEndScore(wxuserLevel.getEndScore() - 1);
+            }
+=====================================================================
+Found a 6 line (75 tokens) duplication in the following files: 
+Starting at line 896 of C:\Users\A681549\Desktop\bsh_hcwxapp_api\src\main\java\com\zencloud\bsh\service\impl\WxAccountServiceImpl.java
+Starting at line 418 of C:\Users\A681549\Desktop\bsh_hcwxapp_api\src\main\java\com\zencloud\bsh\service\impl\WxuserSignInServiceImpl.java
+
+    public ResultMap userAdditon(AdditionDto additionDto, String accessToken, HttpServletRequest request) {
+        String methodName = SERVICE_NAME + Thread.currentThread().getStackTrace()[1].getMethodName();
+        LogInfo logInfo = LogInfoUtil.createLogInfo(request, accessToken, null, methodName);
+        try {
+            WxuserTokenMapping wxuserTokenMapping = wxuserTokenMappingMapper.selectOne(new QueryWrapper<WxuserTokenMapping>().eq("access_token", accessToken));
+            String loginid = wxuserTokenMapping.getLoginid();
+=====================================================================
+Found a 9 line (75 tokens) duplication in the following files: 
+Starting at line 131 of C:\Users\A681549\Desktop\bsh_hcwxapp_api\src\main\java\com\zencloud\bsh\service\impl\WxuserSignInServiceImpl.java
+Starting at line 341 of C:\Users\A681549\Desktop\bsh_hcwxapp_api\src\main\java\com\zencloud\bsh\service\impl\WxuserSignInServiceImpl.java
+
+            wxuserTasks.forEach(task->{
+                WxuserTaskHistory wxuserTaskHistory = wxuserTaskHistoryMapper.selectOne(new QueryWrapper<WxuserTaskHistory>()
+                        .eq("task_id", task.getId())
+                        .eq("loginid",wxuserTokenMapping.getLoginid())
+                        .eq("status",2));
+                if (!ObjectUtils.isEmpty(wxuserTaskHistory)) {
+                    homeMap.remove(task.getCategory());
+                }
+            });

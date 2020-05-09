@@ -1,0 +1,3 @@
+Code_repetion_rate:0.0675549633577615
+ Data1:1014
+ Data2:15010
