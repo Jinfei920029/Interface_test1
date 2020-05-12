@@ -5,6 +5,7 @@ import time
 import re
 
 fileName3 = "C:\\Users\\A692297\\Desktop\\2019\\Python Script\\total_code_line.txt"
+fileName4 = 'C:\\Users\\A692297\\Desktop\\2019\\code_management\\report\\cloc2020-05-11-11_29_29.txt'
 #读取 fileName3 自己得文件路径
 
 def loadData(fileName):
@@ -19,4 +20,4 @@ def loadData(fileName):
                 list_end.append(list[-1])
     return list_end[-1]
 
-print(loadData(fileName3))
+print(loadData(fileName4))

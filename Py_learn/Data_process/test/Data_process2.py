@@ -3,14 +3,14 @@
 import os
 import time
 import re
-report1_psth = "C:\\Users\\A692297\\Desktop\\2019\\code_management\\report\\tokens_2020-05-11-11_29_29.txt"
-report2_path = "C:\\Users\\A692297\\Desktop\\2019\\code_management\\report\\cloc2020-05-11-11_29_29.txt"
+report1_psth = "C:\\Users\\A692297\\Desktop\\2019\\code_management\\report\\tokens_2020-05-11-11_49_02.txt"
+report2_path = "C:\\Users\\A692297\\Desktop\\2019\\code_management\\report\\cloc2020-05-11-11_49_02.txt"
 fileName1 = report1_psth
 fileName2 = report2_path
 #读取 fileName3 自己得文件路径
 
 def loadData1(fileName):
-    key = "Found"
+    key = "Found a"
     with open(fileName, encoding='gb18030') as txtData:
         lines=txtData.readlines()
         num = 0
@@ -18,8 +18,8 @@ def loadData1(fileName):
             if key in line:
                 line=line.strip()#去除空行
                 list = re.findall(r'\b\d+\b' , line)#取出数字
-                #print(list)
-                #print(list[0])
+                print(list)
+                print(list[0])
                 num = num + int(list[0])
     return num
 

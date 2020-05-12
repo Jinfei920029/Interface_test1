@@ -3,12 +3,13 @@
 import os
 user_path1 = "C:\\Users\\A692297\\Jinfei\\software\\PyCharm_project\\Py_learn\\Data_process.py"
 #uesr_path2 = "C:\\Users\\A681549\\Desktop\\bsh_hcwxapp_api\\src\\main\\java\\com\\zencloud\\bsh"
+import time
 
 def cmd1():
     try:
         print("hello")
-        cmd1 = 'cd C:/Users/A692297/Jinfei/software/PyCharm_project/Py_learn/Data_process'
-        cmd2 = 'python .\Data_process.py >> result.txt'
+        cmd1 = 'cd C:/Users/A692297/Jinfei/software/PyCharm_project/Py_learn/Data_process/test'
+        cmd2 = 'python .\Data_process_test.py >> result1.txt'
         cmd = cmd1 + '&&' + cmd2
         os.popen(cmd)
     except Exception as e:
